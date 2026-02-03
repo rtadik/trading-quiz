@@ -70,7 +70,10 @@ export async function POST(request: NextRequest) {
     try {
       const brevoApiKey = process.env.BREVO_API_KEY;
       if (brevoApiKey) {
-        const { createBrevoContact } = await import('@/lib/brevo');
+        const { createBrevoContact, sendTransactionalEmail } = await import('@/lib/brevo');
+        const { getEmailTemplate } = await import('@/lib/email-templates');
+
+        // Create contact in Brevo
         await createBrevoContact({
           email,
           firstName: first_name,
@@ -79,6 +82,24 @@ export async function POST(request: NextRequest) {
           performance,
           automationExperience: automation_experience,
         });
+
+        // Send immediate welcome email (Email #1)
+        const emailTemplate = getEmailTemplate(personalityType, 1);
+        if (emailTemplate) {
+          const { subject, html } = emailTemplate(first_name);
+          await sendTransactionalEmail({
+            to: email,
+            toName: first_name,
+            subject,
+            htmlContent: html,
+          });
+
+          // Mark email #1 as sent
+          await prisma.emailSchedule.updateMany({
+            where: { contactId: contact.id, emailNumber: 1 },
+            data: { status: 'sent', sentAt: new Date() },
+          });
+        }
       }
     } catch (brevoError) {
       console.error('Brevo sync error (non-fatal):', brevoError);

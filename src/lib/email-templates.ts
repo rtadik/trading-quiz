@@ -65,7 +65,7 @@ const emotionalTraderEmails: EmailTemplateFn[] = [
       <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/emotional-trader?name=${encodeURIComponent(firstName)}" class="cta">Download Your Report (PDF)</a></p>
       <p>Over the next two weeks, I'll be sending you specific strategies, real stories from other emotional traders, and a solution that's helped hundreds of traders just like you.</p>
       <hr class="divider">
-      <p>P.S. - Want to connect with other traders? <a href="${process.env.COMMUNITY_LINK || '#'}">Join our community</a></p>
+      <p>P.S. - Want to connect with other traders? <a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}">Join our community</a></p>
     `),
   }),
   // Email 2: Day 1 - The Real Problem
@@ -173,7 +173,7 @@ const emotionalTraderEmails: EmailTemplateFn[] = [
       <p>His realization: <em>"My 'trading instincts' were just emotional reactions. The bot wasn't smarter than me. It was just more disciplined."</em></p>
       <p>Now 80% of his capital runs automated—consistent, emotionless, profitable. 20% he plays with manually for enjoyment.</p>
       <p><strong>The question for you:</strong> How much longer are you going to fight your emotions?</p>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">See How It Works</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">See How It Works</a></p>
       <p>Talk soon</p>
     `),
   }),
@@ -189,7 +189,7 @@ const emotionalTraderEmails: EmailTemplateFn[] = [
       <p><strong>"I don't understand the technology"</strong> — You don't need to. Stake the token → Get access → Receive daily USDT. That's it.</p>
       <p><strong>The real question isn't "Is this perfect?"</strong> — it's "Is this better than what I'm doing now?"</p>
       <p>If you're losing money to emotional decisions, the answer is yes.</p>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
       <p>Talk soon</p>
     `),
   }),
@@ -209,7 +209,7 @@ const emotionalTraderEmails: EmailTemplateFn[] = [
         <li>Access to our private Emotional Traders support group</li>
         <li>First month performance tracking and optimization</li>
       </ul>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">Book Your Onboarding Call</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Book Your Onboarding Call</a></p>
       <p>If you're not ready yet, that's totally fine. Stay on this list—we'll keep sending valuable content.</p>
       <p>Talk soon</p>
       <hr class="divider">
@@ -243,7 +243,7 @@ const timeStarvedTraderEmails: EmailTemplateFn[] = [
       <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/time-starved-trader?name=${encodeURIComponent(firstName)}" class="cta">Download Your Report (PDF)</a></p>
       <p>Over the next two weeks, I'll be sending you specific strategies designed for busy traders like you.</p>
       <hr class="divider">
-      <p>P.S. - Want to connect with other busy traders? <a href="${process.env.COMMUNITY_LINK || '#'}">Join our community</a></p>
+      <p>P.S. - Want to connect with other busy traders? <a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}">Join our community</a></p>
     `),
   }),
   // Email 2: Day 1 - The Real Problem
@@ -342,7 +342,7 @@ const timeStarvedTraderEmails: EmailTemplateFn[] = [
       </ul>
       <p><em>"The best part isn't the returns—it's getting my time back. I was spending 2-3 hours a day on trading and missing most opportunities anyway. Now the bot handles it and I have my life back."</em></p>
       <p>Want to get your time back too?</p>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">See How It Works</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">See How It Works</a></p>
       <p>Talk soon</p>
     `),
   }),
@@ -357,7 +357,7 @@ const timeStarvedTraderEmails: EmailTemplateFn[] = [
       <p><strong>"How do I know it's working if I'm not watching?"</strong> — Daily USDT deposits to your wallet. Weekly performance reports. You verify results without monitoring every trade.</p>
       <p><strong>"What about risk?"</strong> — You control your stake size. Start small. See results. Scale up when comfortable.</p>
       <p>The question isn't whether automation can help you. It's how much longer you'll miss opportunities while you're busy living your life.</p>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
       <p>Talk soon</p>
     `),
   }),
@@ -375,7 +375,7 @@ const timeStarvedTraderEmails: EmailTemplateFn[] = [
         <li>Access to our Time-Starved Traders support group</li>
         <li>First month performance tracking</li>
       </ul>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">Book Your Onboarding Call</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Book Your Onboarding Call</a></p>
       <p>Not ready yet? That's fine. But remember: the market doesn't wait for you to be available.</p>
       <p>Talk soon</p>
     `),
@@ -407,7 +407,7 @@ const inconsistentExecutorEmails: EmailTemplateFn[] = [
       <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/inconsistent-executor?name=${encodeURIComponent(firstName)}" class="cta">Download Your Report (PDF)</a></p>
       <p>Over the next two weeks, I'll share strategies specifically designed for traders who know what to do but struggle to do it.</p>
       <hr class="divider">
-      <p>P.S. - Connect with others solving the same problem: <a href="${process.env.COMMUNITY_LINK || '#'}">Join our community</a></p>
+      <p>P.S. - Connect with others solving the same problem: <a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}">Join our community</a></p>
     `),
   }),
   // Email 2: Day 1
@@ -501,7 +501,7 @@ const inconsistentExecutorEmails: EmailTemplateFn[] = [
       </ul>
       <p><em>"The hardest part was admitting I was the problem. Once I accepted that and let the system execute, everything changed."</em></p>
       <p>Ready to close your execution gap?</p>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">See How It Works</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">See How It Works</a></p>
       <p>Talk soon</p>
     `),
   }),
@@ -518,7 +518,7 @@ const inconsistentExecutorEmails: EmailTemplateFn[] = [
       <p><strong>"What if the bot makes mistakes?"</strong> — Bots don't make execution mistakes. They might face unfavorable markets, but they never break their own rules.</p>
       <p><strong>"Can I start small?"</strong> — Absolutely. Most people start with a small stake, verify results, then scale up.</p>
       <p><strong>"What if I want to stop?"</strong> — Unstake anytime. No lock-in.</p>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
       <p>Talk soon</p>
     `),
   }),
@@ -536,7 +536,7 @@ const inconsistentExecutorEmails: EmailTemplateFn[] = [
         <li>Access to our Inconsistent Executors support group</li>
         <li>First month performance tracking</li>
       </ul>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">Book Your Onboarding Call</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Book Your Onboarding Call</a></p>
       <p>Your strategy deserves perfect execution. Let's make it happen.</p>
       <p>Talk soon</p>
     `),
@@ -568,7 +568,7 @@ const overwhelmedAnalystEmails: EmailTemplateFn[] = [
       <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/overwhelmed-analyst?name=${encodeURIComponent(firstName)}" class="cta">Download Your Report (PDF)</a></p>
       <p>Over the next two weeks, I'll help you simplify your approach and find clarity.</p>
       <hr class="divider">
-      <p>P.S. - Join others who've found clarity: <a href="${process.env.COMMUNITY_LINK || '#'}">Our community</a></p>
+      <p>P.S. - Join others who've found clarity: <a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}">Our community</a></p>
     `),
   }),
   // Email 2: Day 1
@@ -676,7 +676,7 @@ const overwhelmedAnalystEmails: EmailTemplateFn[] = [
         <li>Relaxed and focused on other things</li>
       </ul>
       <p><em>"The mental clarity was the biggest change. I didn't realize how much energy I was spending on analysis until I stopped. Now I spend that energy on my actual life."</em></p>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">See How It Works</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">See How It Works</a></p>
       <p>Talk soon</p>
     `),
   }),
@@ -692,7 +692,7 @@ const overwhelmedAnalystEmails: EmailTemplateFn[] = [
       <p><strong>"I want to understand every trade"</strong> — You can still study the bot's trades. You just don't need to make the decisions in real-time.</p>
       <p><strong>"What if the algorithm is wrong?"</strong> — It will be sometimes. But it's wrong objectively, with controlled risk. You're wrong subjectively, with emotional risk on top.</p>
       <p><strong>"Can I still analyze for fun?"</strong> — Absolutely. But separate analysis-for-fun from analysis-for-profit. Let the bot handle profits.</p>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
       <p>Talk soon</p>
     `),
   }),
@@ -712,7 +712,7 @@ const overwhelmedAnalystEmails: EmailTemplateFn[] = [
         <li>Access to our Overwhelmed Analysts support group</li>
         <li>First month performance tracking</li>
       </ul>
-      <p><a href="${process.env.COMMUNITY_LINK || '#'}" class="cta">Book Your Onboarding Call</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Book Your Onboarding Call</a></p>
       <p>Stop analyzing. Start executing.</p>
       <p>Talk soon</p>
     `),
