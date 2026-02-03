@@ -25,8 +25,8 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
     name: 'The Emotional Trader',
     emoji: '🎭',
     tagline: 'Your emotions are sabotaging your success',
-    color: '#EF4444',
-    bgGradient: 'from-red-600 to-orange-500',
+    color: '#FF4FDA',
+    bgGradient: 'from-pink-dark to-pink-light',
     shortDescription:
       "You're passionate about trading, but your emotions are sabotaging your success. FOMO, fear, and impulsive decisions are keeping you from consistent profits. The good news? This is one of the easiest problems to fix with the right system.",
     quickTip:
@@ -126,8 +126,8 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
     name: 'The Time-Starved Trader',
     emoji: '⏰',
     tagline: 'You need a solution that works while you sleep',
-    color: '#3B82F6',
-    bgGradient: 'from-blue-600 to-cyan-500',
+    color: '#49ACF2',
+    bgGradient: 'from-blue-dark to-blue-light',
     shortDescription:
       "You understand trading potential, but your busy life prevents you from capitalizing on opportunities. Missing market moves while you sleep or work is frustrating—but it doesn't have to be this way.",
     quickTip:
@@ -227,8 +227,8 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
     name: 'The Inconsistent Executor',
     emoji: '⚡',
     tagline: 'You know what to do—you just need consistent execution',
-    color: '#F59E0B',
-    bgGradient: 'from-yellow-500 to-amber-600',
+    color: '#E0C145',
+    bgGradient: 'from-[#E0C145] to-[#FFC440]',
     shortDescription:
       "You have the knowledge and strategy, but execution is your Achilles heel. You know what to do but struggle to follow through consistently. Great news: discipline is a system problem, not a willpower problem.",
     quickTip:
@@ -328,8 +328,8 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
     name: 'The Overwhelmed Analyst',
     emoji: '📊',
     tagline: 'You need less information, not more',
-    color: '#8B5CF6',
-    bgGradient: 'from-purple-600 to-violet-500',
+    color: '#5BD69F',
+    bgGradient: 'from-[#5BD69F] to-[#8ACEFE]',
     shortDescription:
       "You're drowning in information, indicators, and conflicting advice. By the time you analyze everything, the opportunity is gone. What you need isn't more information—it's clarity and simplification.",
     quickTip:

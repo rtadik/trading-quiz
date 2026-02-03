@@ -38,10 +38,10 @@ export default function MultipleChoiceStep({
           <button
             key={option.value}
             onClick={() => onSubmit(option.value)}
-            className="w-full text-left bg-white/5 border border-white/15 text-gray-200 px-6 py-4 rounded-xl hover:bg-white/10 hover:border-blue-500/50 transition-all duration-200 group"
+            className="w-full text-left bg-white/5 border border-white/15 text-gray-200 px-6 py-4 rounded-xl hover:bg-white/10 hover:border-pink-light/50 transition-all duration-200 group"
           >
             <div className="flex items-center gap-4">
-              <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sm font-medium text-gray-400 group-hover:bg-blue-500/20 group-hover:text-blue-400 transition-colors">
+              <span className="flex-shrink-0 w-8 h-8 rounded-lg bg-white/10 flex items-center justify-center text-sm font-medium text-gray-400 group-hover:bg-pink-light/20 group-hover:text-pink-light transition-colors">
                 {String.fromCharCode(65 + index)}
               </span>
               <span className="group-hover:text-white transition-colors">

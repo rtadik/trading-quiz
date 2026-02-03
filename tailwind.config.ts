@@ -9,19 +9,46 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          50: '#f0f7ff',
-          100: '#e0effe',
-          200: '#bae0fd',
-          300: '#7cc8fc',
-          400: '#36aaf8',
-          500: '#0c8ee9',
-          600: '#0070c7',
-          700: '#0159a1',
-          800: '#064c85',
-          900: '#0b406e',
-          950: '#072849',
+        // Primary blue gradient
+        blue: {
+          light: '#95D3FF',
+          DEFAULT: '#49ACF2',
+          dark: '#1589DC',
         },
+        // Pink/magenta gradient
+        pink: {
+          light: '#FF4FDA',
+          DEFAULT: '#FF4FDA',
+          dark: '#EE01BC',
+        },
+        // Accent colors
+        green: {
+          DEFAULT: '#5BD69F',
+        },
+        red: {
+          DEFAULT: '#F07178',
+        },
+        yellow: {
+          DEFAULT: '#E0C145',
+        },
+        // Dark background gradient
+        dark: {
+          light: '#111B32',
+          DEFAULT: '#0D1526',
+          deep: '#070A1B',
+        },
+        // Multi gradient colors
+        multi: {
+          blue: '#8ACEFE',
+          pink: '#FE49D8',
+          yellow: '#FFC440',
+        },
+      },
+      backgroundImage: {
+        'gradient-blue': 'linear-gradient(135deg, #1589DC 0%, #49ACF2 50%, #95D3FF 100%)',
+        'gradient-pink': 'linear-gradient(135deg, #EE01BC 0%, #FF4FDA 100%)',
+        'gradient-dark': 'linear-gradient(180deg, #111B32 0%, #070A1B 100%)',
+        'gradient-multi': 'linear-gradient(135deg, #8ACEFE 0%, #FE49D8 50%, #FFC440 100%)',
       },
     },
   },

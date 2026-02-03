@@ -4,17 +4,21 @@
 
 :root {
   --foreground-rgb: 255, 255, 255;
-  --background-start-rgb: 10, 15, 30;
-  --background-end-rgb: 5, 10, 20;
+  --blue-light: #95D3FF;
+  --blue: #49ACF2;
+  --blue-dark: #1589DC;
+  --pink-light: #FF4FDA;
+  --pink-dark: #EE01BC;
+  --green: #5BD69F;
+  --red: #F07178;
+  --yellow: #E0C145;
+  --dark-light: #111B32;
+  --dark-deep: #070A1B;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-    to bottom,
-    rgb(var(--background-start-rgb)),
-    rgb(var(--background-end-rgb))
-  );
+  background: linear-gradient(180deg, #111B32 0%, #070A1B 100%);
   min-height: 100vh;
 }
 

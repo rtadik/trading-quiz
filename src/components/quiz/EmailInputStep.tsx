@@ -59,7 +59,7 @@ export default function EmailInputStep({
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
         autoFocus
-        className="w-full bg-white/5 border border-white/20 text-white text-lg px-6 py-4 rounded-xl focus:border-blue-500 focus:bg-white/10 transition-all placeholder:text-gray-500"
+        className="w-full bg-white/5 border border-white/20 text-white text-lg px-6 py-4 rounded-xl focus:border-blue focus:bg-white/10 transition-all placeholder:text-gray-500"
       />
       {error && (
         <p className="text-red-400 text-sm mt-2">{error}</p>
@@ -67,7 +67,7 @@ export default function EmailInputStep({
       <div className="mt-6 flex items-start gap-3">
         <button
           onClick={handleSubmit}
-          className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-8 py-3 rounded-xl hover:from-blue-500 hover:to-cyan-400 transition-all duration-200 flex items-center gap-2"
+          className="bg-gradient-to-r from-blue-dark to-blue text-white font-semibold px-8 py-3 rounded-xl hover:from-blue hover:to-blue-light transition-all duration-200 flex items-center gap-2 shadow-lg shadow-blue-dark/25"
         >
           Continue
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

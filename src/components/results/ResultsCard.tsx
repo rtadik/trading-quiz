@@ -59,8 +59,8 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
         className="bg-white/5 border border-white/10 rounded-xl p-6 mb-6"
       >
         <div className="flex items-start gap-4">
-          <div className="flex-shrink-0 w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
-            <svg className="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="flex-shrink-0 w-10 h-10 bg-green/20 rounded-lg flex items-center justify-center">
+            <svg className="w-5 h-5 text-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
@@ -80,12 +80,12 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6 }}
-        className="bg-amber-500/10 border border-amber-500/20 rounded-xl p-6 mb-8"
+        className="bg-yellow/10 border border-yellow/20 rounded-xl p-6 mb-8"
       >
         <div className="flex items-start gap-3">
           <span className="text-2xl">💡</span>
           <div>
-            <h3 className="text-amber-400 font-semibold mb-1">
+            <h3 className="text-yellow font-semibold mb-1">
               Quick Tip for {typeInfo.name.replace('The ', '')}s
             </h3>
             <p className="text-gray-300 text-sm leading-relaxed">
@@ -106,7 +106,7 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
           href={pdfUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="block w-full text-center bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold px-6 py-4 rounded-xl hover:from-blue-500 hover:to-cyan-400 transition-all duration-200 shadow-lg shadow-blue-500/25"
+          className="block w-full text-center bg-gradient-to-r from-pink-dark to-pink-light text-white font-semibold px-6 py-4 rounded-xl hover:from-[#EE01BC] hover:to-[#FF6BE8] transition-all duration-200 shadow-lg shadow-pink-dark/30"
         >
           Download Your Full Report (PDF)
         </a>

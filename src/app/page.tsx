@@ -17,7 +17,7 @@ export default function Home() {
         <div className="space-y-4">
           <Link
             href="/quiz"
-            className="inline-block bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-lg px-8 py-4 rounded-xl hover:from-blue-500 hover:to-cyan-400 transition-all duration-200 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
+            className="inline-block bg-gradient-to-r from-pink-dark to-pink-light text-white font-semibold text-lg px-8 py-4 rounded-xl hover:from-[#EE01BC] hover:to-[#FF6BE8] transition-all duration-200 shadow-lg shadow-pink-dark/30 hover:shadow-pink-dark/50 hover:scale-105"
           >
             Take the Free Quiz
           </Link>
