@@ -17,10 +17,10 @@ interface Contact {
 }
 
 const TYPE_LABELS: Record<string, string> = {
-  emotional_trader: '🎭 Emotional',
-  time_starved_trader: '⏰ Time-Starved',
-  inconsistent_executor: '⚡ Inconsistent',
-  overwhelmed_analyst: '📊 Overwhelmed',
+  emotional_trader: ' Emotional',
+  time_starved_trader: ' Time-Starved',
+  inconsistent_executor: ' Inconsistent',
+  overwhelmed_analyst: ' Overwhelmed',
 };
 
 const STATUS_COLORS: Record<string, string> = {
@@ -96,10 +96,10 @@ export default function SubmissionsPage() {
             className="bg-white/5 border border-white/20 text-white px-4 py-2 rounded-lg text-sm focus:border-blue-500 appearance-none cursor-pointer"
           >
             <option value="">All Types</option>
-            <option value="emotional_trader">🎭 Emotional Trader</option>
-            <option value="time_starved_trader">⏰ Time-Starved Trader</option>
-            <option value="inconsistent_executor">⚡ Inconsistent Executor</option>
-            <option value="overwhelmed_analyst">📊 Overwhelmed Analyst</option>
+            <option value="emotional_trader"> Emotional Trader</option>
+            <option value="time_starved_trader"> Time-Starved Trader</option>
+            <option value="inconsistent_executor"> Inconsistent Executor</option>
+            <option value="overwhelmed_analyst"> Overwhelmed Analyst</option>
           </select>
         </div>
 

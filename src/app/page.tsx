@@ -5,7 +5,7 @@ export default function Home() {
     <main className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-2xl mx-auto text-center">
         <div className="mb-8">
-          <span className="text-6xl">📊</span>
+          <span className="text-6xl"></span>
         </div>
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
           What Type of Trader Are You?
@@ -27,10 +27,10 @@ export default function Home() {
         </div>
         <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
-            { emoji: '🎭', label: 'Emotional Trader' },
-            { emoji: '⏰', label: 'Time-Starved Trader' },
-            { emoji: '⚡', label: 'Inconsistent Executor' },
-            { emoji: '📊', label: 'Overwhelmed Analyst' },
+            { emoji: '', label: 'Emotional Trader' },
+            { emoji: '', label: 'Time-Starved Trader' },
+            { emoji: '', label: 'Inconsistent Executor' },
+            { emoji: '', label: 'Overwhelmed Analyst' },
           ].map((type) => (
             <div
               key={type.label}

@@ -71,6 +71,9 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
             <p className="text-gray-400 text-sm">
               Check your inbox for your detailed Trading Personality Report with specific strategies and an action plan.
             </p>
+            <p className="text-yellow/80 text-sm mt-2 font-medium">
+               Can't find it? Please check your Promotions or Spam folder.
+            </p>
           </div>
         </div>
       </motion.div>
@@ -83,7 +86,7 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
         className="bg-yellow/10 border border-yellow/20 rounded-xl p-6 mb-8"
       >
         <div className="flex items-start gap-3">
-          <span className="text-2xl">💡</span>
+          <span className="text-2xl"></span>
           <div>
             <h3 className="text-yellow font-semibold mb-1">
               Quick Tip for {typeInfo.name.replace('The ', '')}s

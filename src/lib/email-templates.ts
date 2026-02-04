@@ -10,30 +10,35 @@ function wrapInEmailLayout(content: string): string {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1a1a2e; margin: 0; padding: 0; background-color: #f5f5f7; }
-    .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; }
-    .header { background: linear-gradient(135deg, #0a0f1e, #1a1f3e); padding: 30px; text-align: center; }
-    .header h1 { color: #ffffff; margin: 0; font-size: 20px; }
-    .body { padding: 30px; }
-    .body p { margin: 0 0 16px; color: #374151; }
-    .body blockquote { border-left: 3px solid #3b82f6; padding-left: 16px; margin: 16px 0; color: #6b7280; font-style: italic; }
-    .cta { display: inline-block; background: linear-gradient(135deg, #2563eb, #06b6d4); color: #ffffff; text-decoration: none; padding: 14px 28px; border-radius: 8px; font-weight: 600; margin: 16px 0; }
-    .footer { padding: 20px 30px; background: #f9fafb; text-align: center; font-size: 12px; color: #9ca3af; }
-    .divider { border: none; border-top: 1px solid #e5e7eb; margin: 24px 0; }
-    ul { padding-left: 20px; }
-    ul li { margin-bottom: 8px; color: #374151; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.7; color: #1a1a1a; margin: 0; padding: 20px; background-color: #f5f5f5; }
+    .container { max-width: 600px; margin: 0 auto; background: #ffffff; padding: 0; }
+    .header { background: #000000; padding: 24px 40px; text-align: center; }
+    .header h1 { color: #ffffff; margin: 0; font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+    .body { padding: 40px; }
+    .body p { margin: 0 0 20px; color: #1a1a1a; font-size: 16px; }
+    .body strong { font-weight: 600; }
+    .highlight { background: #49ACF2; color: #ffffff; padding: 2px 6px; font-weight: 500; }
+    .body blockquote { border-left: 3px solid #49ACF2; padding-left: 16px; margin: 20px 0; color: #4a4a4a; font-style: italic; }
+    .cta { display: inline-block; background: #49ACF2; color: #ffffff; text-decoration: none; padding: 14px 32px; border-radius: 6px; font-weight: 600; margin: 20px 0; }
+    .cta:hover { background: #3a9bd9; }
+    .footer { padding: 30px 40px; background: #f9f9f9; text-align: center; font-size: 13px; color: #666666; border-top: 1px solid #e5e5e5; }
+    .divider { border: none; border-top: 1px solid #e5e5e5; margin: 30px 0; }
+    ul { padding-left: 20px; margin: 20px 0; }
+    ul li { margin-bottom: 12px; color: #1a1a1a; font-size: 16px; }
+    a { color: #49ACF2; text-decoration: none; }
+    a:hover { text-decoration: underline; }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="header">
-      <h1>Trading Personality Quiz</h1>
+      <h1>TRADING PERSONALITY QUIZ</h1>
     </div>
     <div class="body">
       ${content}
     </div>
     <div class="footer">
-      <p>${process.env.SENDER_NAME || 'Trading Quiz'}<br>Helping traders improve their results</p>
+      <p><strong>${process.env.SENDER_NAME || 'Trading Quiz'}</strong><br>Helping traders improve their results</p>
     </div>
   </div>
 </body>
@@ -47,12 +52,12 @@ function wrapInEmailLayout(content: string): string {
 const emotionalTraderEmails: EmailTemplateFn[] = [
   // Email 1: Immediate - PDF Delivery
   (firstName) => ({
-    subject: `Your Trading Personality Report is Here, ${firstName}! 🎭`,
+    subject: `Your Trading Personality Report is Here, ${firstName}!`,
     html: wrapInEmailLayout(`
       <p>Hey ${firstName},</p>
       <p>Your Trading Personality Report is ready!</p>
-      <p>Based on your quiz responses, you're an <strong>EMOTIONAL TRADER</strong> 🎭</p>
-      <p>This means your biggest enemy isn't the market—it's the emotions you bring to it. FOMO, fear, and impulsive decisions are costing you consistent profits.</p>
+      <p>Based on your quiz responses, you're an <strong>EMOTIONAL TRADER</strong></p>
+      <p>This means your biggest enemy isn't the market - it's the emotions you bring to it. FOMO, fear, and impulsive decisions are costing you consistent profits.</p>
       <p>But here's the good news: This is one of the <strong>easiest problems to fix</strong> with the right system.</p>
       <p>Your detailed report includes:</p>
       <ul>
@@ -118,7 +123,7 @@ const emotionalTraderEmails: EmailTemplateFn[] = [
       <p>Hey ${firstName},</p>
       <p>Let me introduce you to Sarah. She's an Emotional Trader, just like you.</p>
       <p>Last year, her trading account told a painful story: down $3,200 over 4 months. FOMO entries, revenge trading, panic selling winners.</p>
-      <p>She knew what to do—she'd taken courses, read books, had a solid strategy. Her problem was execution.</p>
+      <p>She knew what to do-she'd taken courses, read books, had a solid strategy. Her problem was execution.</p>
       <p>Then she tried something different. She took her proven strategy and <strong>automated it</strong>.</p>
       <p>Here's what happened:</p>
       <ul>
@@ -167,11 +172,11 @@ const emotionalTraderEmails: EmailTemplateFn[] = [
       <p>Hey ${firstName},</p>
       <p>Michael traded for 2 years. Read every book, took 3 courses, had a solid strategy. In reality? Down $4,500 overall. His problem? Emotional execution.</p>
       <p>After another -$800 month, he decided to try automation with a small amount.</p>
-      <p><strong>Month 1:</strong> +$340 — First green month in 6 months.</p>
+      <p><strong>Month 1:</strong> +$340 - First green month in 6 months.</p>
       <p><strong>Month 2:</strong> +$780</p>
       <p><strong>Month 3-4:</strong> +$1,120 and +$840</p>
       <p>His realization: <em>"My 'trading instincts' were just emotional reactions. The bot wasn't smarter than me. It was just more disciplined."</em></p>
-      <p>Now 80% of his capital runs automated—consistent, emotionless, profitable. 20% he plays with manually for enjoyment.</p>
+      <p>Now 80% of his capital runs automated-consistent, emotionless, profitable. 20% he plays with manually for enjoyment.</p>
       <p><strong>The question for you:</strong> How much longer are you going to fight your emotions?</p>
       <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">See How It Works</a></p>
       <p>Talk soon</p>
@@ -183,11 +188,11 @@ const emotionalTraderEmails: EmailTemplateFn[] = [
     html: wrapInEmailLayout(`
       <p>Hey ${firstName},</p>
       <p>Let me address the big concerns directly:</p>
-      <p><strong>"I'll lose control of my money"</strong> — You have MORE control, not less. You control how much you stake, can unstake anytime, and receive daily returns you can withdraw.</p>
-      <p><strong>"What if the bot loses money?"</strong> — It will sometimes. That's trading. The difference? It loses with controlled risk, following rules exactly, without emotional spiraling.</p>
-      <p><strong>"This sounds too good to be true"</strong> — It's not magic. It's just better execution. Your strategy executed the way it's supposed to be—every single time.</p>
-      <p><strong>"I don't understand the technology"</strong> — You don't need to. Stake the token → Get access → Receive daily USDT. That's it.</p>
-      <p><strong>The real question isn't "Is this perfect?"</strong> — it's "Is this better than what I'm doing now?"</p>
+      <p><strong>"I'll lose control of my money"</strong> - You have MORE control, not less. You control how much you stake, can unstake anytime, and receive daily returns you can withdraw.</p>
+      <p><strong>"What if the bot loses money?"</strong> - It will sometimes. That's trading. The difference? It loses with controlled risk, following rules exactly, without emotional spiraling.</p>
+      <p><strong>"This sounds too good to be true"</strong> - It's not magic. It's just better execution. Your strategy executed the way it's supposed to be-every single time.</p>
+      <p><strong>"I don't understand the technology"</strong> - You don't need to. Stake the token → Get access → Receive daily USDT. That's it.</p>
+      <p><strong>The real question isn't "Is this perfect?"</strong> - it's "Is this better than what I'm doing now?"</p>
       <p>If you're losing money to emotional decisions, the answer is yes.</p>
       <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
       <p>Talk soon</p>
@@ -200,8 +205,8 @@ const emotionalTraderEmails: EmailTemplateFn[] = [
       <p>Hey ${firstName},</p>
       <p>We've been talking for over two weeks now. You've learned why you're an Emotional Trader, why discipline fails, and how automation removes emotion from the equation.</p>
       <p>Now it's decision time.</p>
-      <p><strong>Option A:</strong> Keep doing what you're doing — manual trading with the same emotional challenges. In 6 months, you'll likely be in the same place.</p>
-      <p><strong>Option B:</strong> Try something different — remove emotional decision-making, let proven strategies execute consistently. In 6 months, you could have actual profits.</p>
+      <p><strong>Option A:</strong> Keep doing what you're doing - manual trading with the same emotional challenges. In 6 months, you'll likely be in the same place.</p>
+      <p><strong>Option B:</strong> Try something different - remove emotional decision-making, let proven strategies execute consistently. In 6 months, you could have actual profits.</p>
       <p><strong>For quiz takers like you, we have a special offer:</strong></p>
       <ul>
         <li>Priority onboarding (skip the waitlist)</li>
@@ -210,7 +215,7 @@ const emotionalTraderEmails: EmailTemplateFn[] = [
         <li>First month performance tracking and optimization</li>
       </ul>
       <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Book Your Onboarding Call</a></p>
-      <p>If you're not ready yet, that's totally fine. Stay on this list—we'll keep sending valuable content.</p>
+      <p>If you're not ready yet, that's totally fine. Stay on this list-we'll keep sending valuable content.</p>
       <p>Talk soon</p>
       <hr class="divider">
       <p><em>P.S. - The biggest risk isn't trying automation. The biggest risk is doing the same thing for another 6 months and getting the same results.</em></p>
@@ -225,12 +230,12 @@ const emotionalTraderEmails: EmailTemplateFn[] = [
 const timeStarvedTraderEmails: EmailTemplateFn[] = [
   // Email 1: Immediate - PDF Delivery
   (firstName) => ({
-    subject: `Your Trading Personality Report is Here, ${firstName}! ⏰`,
+    subject: `Your Trading Personality Report is Here, ${firstName}! `,
     html: wrapInEmailLayout(`
       <p>Hey ${firstName},</p>
       <p>Your Trading Personality Report is ready!</p>
-      <p>Based on your quiz responses, you're a <strong>TIME-STARVED TRADER</strong> ⏰</p>
-      <p>This means your biggest barrier isn't lack of knowledge—it's lack of time. Markets don't care about your schedule, and the best moves often happen while you're sleeping or working.</p>
+      <p>Based on your quiz responses, you're a <strong>TIME-STARVED TRADER</strong> </p>
+      <p>This means your biggest barrier isn't lack of knowledge-it's lack of time. Markets don't care about your schedule, and the best moves often happen while you're sleeping or working.</p>
       <p>But here's the good news: this is a <strong>solvable problem</strong>.</p>
       <p>Your detailed report includes:</p>
       <ul>
@@ -257,7 +262,7 @@ const timeStarvedTraderEmails: EmailTemplateFn[] = [
       <p>Here's the truth most people won't tell you:</p>
       <blockquote>You can't compete with full-time traders on availability. And you shouldn't try.</blockquote>
       <p>Trying to day-trade with a full-time job is like trying to run a marathon while carrying a backpack full of rocks. You can do it, but you're at a massive disadvantage.</p>
-      <p>The traders who win with limited time don't try harder—they <strong>trade smarter</strong>.</p>
+      <p>The traders who win with limited time don't try harder-they <strong>trade smarter</strong>.</p>
       <p>I'll show you exactly what that means in my next email.</p>
       <p>Talk soon</p>
     `),
@@ -340,7 +345,7 @@ const timeStarvedTraderEmails: EmailTemplateFn[] = [
         <li>She reviews performance once a week (takes 5 minutes)</li>
         <li>She spends her evenings with family instead of staring at charts</li>
       </ul>
-      <p><em>"The best part isn't the returns—it's getting my time back. I was spending 2-3 hours a day on trading and missing most opportunities anyway. Now the bot handles it and I have my life back."</em></p>
+      <p><em>"The best part isn't the returns-it's getting my time back. I was spending 2-3 hours a day on trading and missing most opportunities anyway. Now the bot handles it and I have my life back."</em></p>
       <p>Want to get your time back too?</p>
       <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">See How It Works</a></p>
       <p>Talk soon</p>
@@ -352,10 +357,10 @@ const timeStarvedTraderEmails: EmailTemplateFn[] = [
     html: wrapInEmailLayout(`
       <p>Hey ${firstName},</p>
       <p>Let me address the most common concerns from Time-Starved Traders:</p>
-      <p><strong>"I want to learn to trade myself"</strong> — Great! Keep learning. But while you're learning, why not have a system generating returns? You can always trade manually when you're ready.</p>
-      <p><strong>"What if I get more free time later?"</strong> — Even full-time traders use automation. More time doesn't mean manual is better—it just means you have time to oversee automated systems.</p>
-      <p><strong>"How do I know it's working if I'm not watching?"</strong> — Daily USDT deposits to your wallet. Weekly performance reports. You verify results without monitoring every trade.</p>
-      <p><strong>"What about risk?"</strong> — You control your stake size. Start small. See results. Scale up when comfortable.</p>
+      <p><strong>"I want to learn to trade myself"</strong> - Great! Keep learning. But while you're learning, why not have a system generating returns? You can always trade manually when you're ready.</p>
+      <p><strong>"What if I get more free time later?"</strong> - Even full-time traders use automation. More time doesn't mean manual is better-it just means you have time to oversee automated systems.</p>
+      <p><strong>"How do I know it's working if I'm not watching?"</strong> - Daily USDT deposits to your wallet. Weekly performance reports. You verify results without monitoring every trade.</p>
+      <p><strong>"What about risk?"</strong> - You control your stake size. Start small. See results. Scale up when comfortable.</p>
       <p>The question isn't whether automation can help you. It's how much longer you'll miss opportunities while you're busy living your life.</p>
       <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
       <p>Talk soon</p>
@@ -367,7 +372,7 @@ const timeStarvedTraderEmails: EmailTemplateFn[] = [
     html: wrapInEmailLayout(`
       <p>Hey ${firstName},</p>
       <p>Over the past two weeks, you've learned why being time-starved is your biggest trading barrier and how automation solves it completely.</p>
-      <p>Every day you wait is another day of missed opportunities. Markets are moving right now—while you read this email. Are you capturing those moves?</p>
+      <p>Every day you wait is another day of missed opportunities. Markets are moving right now-while you read this email. Are you capturing those moves?</p>
       <p><strong>For quiz takers like you:</strong></p>
       <ul>
         <li>Priority onboarding</li>
@@ -389,12 +394,12 @@ const timeStarvedTraderEmails: EmailTemplateFn[] = [
 const inconsistentExecutorEmails: EmailTemplateFn[] = [
   // Email 1: Immediate - PDF Delivery
   (firstName) => ({
-    subject: `Your Trading Personality Report is Here, ${firstName}! ⚡`,
+    subject: `Your Trading Personality Report is Here, ${firstName}! `,
     html: wrapInEmailLayout(`
       <p>Hey ${firstName},</p>
       <p>Your Trading Personality Report is ready!</p>
-      <p>Based on your quiz responses, you're an <strong>INCONSISTENT EXECUTOR</strong> ⚡</p>
-      <p>This means you have the knowledge and strategy, but execution is your Achilles heel. You know what to do—the gap is in actually doing it consistently.</p>
+      <p>Based on your quiz responses, you're an <strong>INCONSISTENT EXECUTOR</strong> </p>
+      <p>This means you have the knowledge and strategy, but execution is your Achilles heel. You know what to do-the gap is in actually doing it consistently.</p>
       <p>The good news? <strong>Discipline is a system problem, not a willpower problem.</strong></p>
       <p>Your report includes:</p>
       <ul>
@@ -421,7 +426,7 @@ const inconsistentExecutorEmails: EmailTemplateFn[] = [
       <p>You spot a perfect A+ setup... but you hesitate. <em>"What if this time is different?"</em> By the time you decide, it's gone.</p>
       <p>Here's the painful truth: <strong>Your strategy isn't the problem. You are.</strong></p>
       <p>But not in the way you think. It's not that you're weak or undisciplined. It's that you're trying to use willpower to do something that requires systems.</p>
-      <p>Would you trust yourself to manually calculate your taxes every month without software? No—you'd use a system. Trading should be the same.</p>
+      <p>Would you trust yourself to manually calculate your taxes every month without software? No-you'd use a system. Trading should be the same.</p>
       <p>More on this in my next email.</p>
       <p>Talk soon</p>
     `),
@@ -432,7 +437,7 @@ const inconsistentExecutorEmails: EmailTemplateFn[] = [
     html: wrapInEmailLayout(`
       <p>Hey ${firstName},</p>
       <p>Every time you promise "this time I'll follow my rules," you're making the same mistake: relying on willpower.</p>
-      <p>Research shows willpower is like a battery—it depletes with use. After a few losses, a long day at work, or a winning streak that makes you overconfident, your willpower is at zero.</p>
+      <p>Research shows willpower is like a battery-it depletes with use. After a few losses, a long day at work, or a winning streak that makes you overconfident, your willpower is at zero.</p>
       <p>That's exactly when you need discipline most. And exactly when you don't have it.</p>
       <p>The solution isn't more willpower. It's <strong>removing the need for willpower entirely</strong>.</p>
       <ul>
@@ -453,7 +458,7 @@ const inconsistentExecutorEmails: EmailTemplateFn[] = [
       <p>Here's an uncomfortable truth: <strong>You are the weakest link in your trading system.</strong></p>
       <p>Your strategy works. Your rules are sound. The only thing that fails is your execution. So what if you could keep your strategy but remove the human error?</p>
       <p>That's exactly what automation does.</p>
-      <p>Meet David. Same problem as you—great strategy, terrible execution. After 18 months of inconsistency, he automated his rules.</p>
+      <p>Meet David. Same problem as you-great strategy, terrible execution. After 18 months of inconsistency, he automated his rules.</p>
       <p>The result? His automated system followed his rules with 100% consistency. No hesitation. No rule-breaking. No "just this once."</p>
       <p>His strategy finally got to show what it could do when executed properly. And it delivered.</p>
       <p>David didn't get more disciplined. He got smarter about execution.</p>
@@ -480,7 +485,7 @@ const inconsistentExecutorEmails: EmailTemplateFn[] = [
         <li>Three losses in a row? Bot follows rules anyway. No tilt.</li>
         <li>Target reached? Bot takes profit. No "let it run" gambles.</li>
       </ul>
-      <p>Your type benefits MOST from automation because you already have the knowledge. You just need consistent execution—and that's exactly what this provides.</p>
+      <p>Your type benefits MOST from automation because you already have the knowledge. You just need consistent execution-and that's exactly what this provides.</p>
       <p>Reply "SHOW ME" for performance data.</p>
       <p>Talk soon</p>
     `),
@@ -515,9 +520,9 @@ const inconsistentExecutorEmails: EmailTemplateFn[] = [
       <p>The reality is: human execution is flawed. Even the best traders in the world use systems and automation.</p>
       <p>Using automation doesn't mean you stop learning or stop being a trader. It means you use your strengths (strategy, analysis) and eliminate your weakness (inconsistent execution).</p>
       <p><strong>Other concerns:</strong></p>
-      <p><strong>"What if the bot makes mistakes?"</strong> — Bots don't make execution mistakes. They might face unfavorable markets, but they never break their own rules.</p>
-      <p><strong>"Can I start small?"</strong> — Absolutely. Most people start with a small stake, verify results, then scale up.</p>
-      <p><strong>"What if I want to stop?"</strong> — Unstake anytime. No lock-in.</p>
+      <p><strong>"What if the bot makes mistakes?"</strong> - Bots don't make execution mistakes. They might face unfavorable markets, but they never break their own rules.</p>
+      <p><strong>"Can I start small?"</strong> - Absolutely. Most people start with a small stake, verify results, then scale up.</p>
+      <p><strong>"What if I want to stop?"</strong> - Unstake anytime. No lock-in.</p>
       <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
       <p>Talk soon</p>
     `),
@@ -550,13 +555,13 @@ const inconsistentExecutorEmails: EmailTemplateFn[] = [
 const overwhelmedAnalystEmails: EmailTemplateFn[] = [
   // Email 1: Immediate - PDF Delivery
   (firstName) => ({
-    subject: `Your Trading Personality Report is Here, ${firstName}! 📊`,
+    subject: `Your Trading Personality Report is Here, ${firstName}! `,
     html: wrapInEmailLayout(`
       <p>Hey ${firstName},</p>
       <p>Your Trading Personality Report is ready!</p>
-      <p>Based on your quiz responses, you're an <strong>OVERWHELMED ANALYST</strong> 📊</p>
+      <p>Based on your quiz responses, you're an <strong>OVERWHELMED ANALYST</strong> </p>
       <p>This means you're drowning in information, indicators, and conflicting advice. By the time you analyze everything, the opportunity is gone.</p>
-      <p>The good news? What you need isn't more information—it's <strong>clarity and simplification</strong>.</p>
+      <p>The good news? What you need isn't more information-it's <strong>clarity and simplification</strong>.</p>
       <p>Your report includes:</p>
       <ul>
         <li>Why you fall into the Overwhelmed Analyst category</li>
@@ -621,7 +626,7 @@ const overwhelmedAnalystEmails: EmailTemplateFn[] = [
       <p>Hey ${firstName},</p>
       <p>Meet Alex. Former Overwhelmed Analyst. 15 indicators on his charts. Followed 40+ trading accounts. Analyzed for hours before every trade.</p>
       <p>Result? Missed most moves because he was still analyzing when they happened.</p>
-      <p>His turning point: <em>"I realized I was using analysis as a procrastination tool. I wasn't actually trading—I was endlessly preparing to trade."</em></p>
+      <p>His turning point: <em>"I realized I was using analysis as a procrastination tool. I wasn't actually trading-I was endlessly preparing to trade."</em></p>
       <p>He tried simplifying. Fewer indicators, fewer sources. But his analytical mind kept pulling him back to "just one more confirmation."</p>
       <p>Then he discovered automated trading. And it changed everything.</p>
       <p>Why? Because the bot doesn't need 15 indicators. It uses a proven, backtested algorithm with clear, objective rules. No conflicting signals. No "one more check." Just execution.</p>
@@ -687,11 +692,11 @@ const overwhelmedAnalystEmails: EmailTemplateFn[] = [
       <p>Hey ${firstName},</p>
       <p>I get it. You enjoy the analysis. The research. The deep dives. It feels productive.</p>
       <p>But here's the hard truth: <strong>analysis that doesn't lead to action is entertainment, not trading.</strong></p>
-      <p>If your analysis regularly leads to trades that follow your rules, great—keep analyzing. But if you're spending hours analyzing and then either not trading or trading poorly... that analysis is a comfort zone, not an edge.</p>
+      <p>If your analysis regularly leads to trades that follow your rules, great-keep analyzing. But if you're spending hours analyzing and then either not trading or trading poorly... that analysis is a comfort zone, not an edge.</p>
       <p><strong>Other concerns:</strong></p>
-      <p><strong>"I want to understand every trade"</strong> — You can still study the bot's trades. You just don't need to make the decisions in real-time.</p>
-      <p><strong>"What if the algorithm is wrong?"</strong> — It will be sometimes. But it's wrong objectively, with controlled risk. You're wrong subjectively, with emotional risk on top.</p>
-      <p><strong>"Can I still analyze for fun?"</strong> — Absolutely. But separate analysis-for-fun from analysis-for-profit. Let the bot handle profits.</p>
+      <p><strong>"I want to understand every trade"</strong> - You can still study the bot's trades. You just don't need to make the decisions in real-time.</p>
+      <p><strong>"What if the algorithm is wrong?"</strong> - It will be sometimes. But it's wrong objectively, with controlled risk. You're wrong subjectively, with emotional risk on top.</p>
+      <p><strong>"Can I still analyze for fun?"</strong> - Absolutely. But separate analysis-for-fun from analysis-for-profit. Let the bot handle profits.</p>
       <p><a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}" class="cta">Learn More</a></p>
       <p>Talk soon</p>
     `),
@@ -701,7 +706,7 @@ const overwhelmedAnalystEmails: EmailTemplateFn[] = [
     subject: `${firstName}, clarity is one decision away`,
     html: wrapInEmailLayout(`
       <p>Hey ${firstName},</p>
-      <p>For two weeks, you've been learning about your Overwhelmed Analyst tendencies and how simplification—not more analysis—is the path forward.</p>
+      <p>For two weeks, you've been learning about your Overwhelmed Analyst tendencies and how simplification-not more analysis-is the path forward.</p>
       <p>Here's the irony: right now, you might be overthinking whether to try automation. Analyzing the pros and cons. Looking for one more piece of information.</p>
       <p>That's your pattern. Recognize it.</p>
       <p>Sometimes the best analysis is knowing when to stop analyzing and start acting.</p>

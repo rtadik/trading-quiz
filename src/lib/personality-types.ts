@@ -23,7 +23,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
   emotional_trader: {
     type: 'emotional_trader',
     name: 'The Emotional Trader',
-    emoji: '🎭',
+    emoji: '',
     tagline: 'Your emotions are sabotaging your success',
     color: '#FF4FDA',
     bgGradient: 'from-pink-dark to-pink-light',
@@ -32,9 +32,9 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
     quickTip:
       'Your #1 priority is removing emotion from your trading decisions. Set hard rules BEFORE entering trades and commit to following them no matter what you feel in the moment.',
     personalityDescription:
-      "You approach trading with passion and intuition, which can be powerful—but right now, your emotions are making decisions instead of your strategy. You've likely experienced the painful cycle: excitement leading to impulsive entries, fear causing premature exits, and frustration triggering revenge trades.\n\nThis doesn't mean you're a bad trader. It means you're human. The markets are specifically designed to exploit emotional decision-making, and without systems in place to protect you from yourself, even the smartest traders fall into these traps.",
+      "You approach trading with passion and intuition, which can be powerful-but right now, your emotions are making decisions instead of your strategy. You've likely experienced the painful cycle: excitement leading to impulsive entries, fear causing premature exits, and frustration triggering revenge trades.\n\nThis doesn't mean you're a bad trader. It means you're human. The markets are specifically designed to exploit emotional decision-making, and without systems in place to protect you from yourself, even the smartest traders fall into these traps.",
     whyThisCategory:
-      'Your quiz responses indicate that emotional impulses—whether FOMO, fear, or the urge to "get back" at the market—are driving your trading decisions more than objective analysis. You might follow a hype trade on Twitter, exit winning positions too early out of fear, or double down after a loss trying to recover quickly.\n\nThe good news? Once you recognize this pattern, it\'s one of the most fixable problems in trading.',
+      'Your quiz responses indicate that emotional impulses-whether FOMO, fear, or the urge to "get back" at the market-are driving your trading decisions more than objective analysis. You might follow a hype trade on Twitter, exit winning positions too early out of fear, or double down after a loss trying to recover quickly.\n\nThe good news? Once you recognize this pattern, it\'s one of the most fixable problems in trading.',
     challenges: [
       {
         title: 'FOMO Entries',
@@ -71,7 +71,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
       {
         title: 'Resilience',
         description:
-          "You've taken emotional hits but you're still here. That resilience is rare. Most emotional traders quit after big losses. You've survived your mistakes—now it's time to fix the system causing them.",
+          "You've taken emotional hits but you're still here. That resilience is rare. Most emotional traders quit after big losses. You've survived your mistakes-now it's time to fix the system causing them.",
       },
     ],
     improvementSteps: [
@@ -83,7 +83,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
       {
         title: 'Implement Mandatory Trade Journaling (Start Tomorrow)',
         description:
-          'After every trade (win or loss), write: What emotion did I feel? Did I follow my rules? What would I do differently? This builds self-awareness—the first step to emotional control.',
+          'After every trade (win or loss), write: What emotion did I feel? Did I follow my rules? What would I do differently? This builds self-awareness-the first step to emotional control.',
       },
       {
         title: 'Create "Cool-Down" Rules (After Your Next Loss)',
@@ -103,7 +103,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
     ],
     transformSection: {
       intro:
-        "The best traders with your personality type don't \"master their emotions\"—they design systems that make emotions irrelevant.",
+        "The best traders with your personality type don't \"master their emotions\"-they design systems that make emotions irrelevant.",
       whatTheyDo: [
         'They use automation or semi-automation to remove decision-making in the moment',
         'They pre-commit to trades with alerts and limit orders, never market orders during volatility',
@@ -111,7 +111,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
         'They focus on process (did I follow my rules?) not outcomes (did I make money today?)',
       ],
       automationAdvantage:
-        'Many formerly emotional traders discover that automated trading solutions transform their results. When a proven strategy executes automatically based on data—not fear or greed—emotions can\'t sabotage you. You define the rules once when thinking clearly, and the system executes them perfectly every time.',
+        'Many formerly emotional traders discover that automated trading solutions transform their results. When a proven strategy executes automatically based on data-not fear or greed-emotions can\'t sabotage you. You define the rules once when thinking clearly, and the system executes them perfectly every time.',
     },
     nextSteps: {
       bookTitle: 'Trading in the Zone',
@@ -124,18 +124,18 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
   time_starved_trader: {
     type: 'time_starved_trader',
     name: 'The Time-Starved Trader',
-    emoji: '⏰',
+    emoji: '',
     tagline: 'You need a solution that works while you sleep',
     color: '#49ACF2',
     bgGradient: 'from-blue-dark to-blue-light',
     shortDescription:
-      "You understand trading potential, but your busy life prevents you from capitalizing on opportunities. Missing market moves while you sleep or work is frustrating—but it doesn't have to be this way.",
+      "You understand trading potential, but your busy life prevents you from capitalizing on opportunities. Missing market moves while you sleep or work is frustrating-but it doesn't have to be this way.",
     quickTip:
       "Focus on trading strategies that don't require constant monitoring. Set alerts for key levels, or explore automation that works 24/7 while you focus on your life.",
     personalityDescription:
-      "You understand that trading offers real potential, but your biggest enemy isn't lack of knowledge—it's lack of time. You have a job, a business, a family, or other commitments that demand your attention. Markets don't care about your schedule.\n\nYou've experienced the frustration: checking charts during lunch breaks, waking up to missed opportunities, setting alerts that go off during meetings. You watch other traders celebrate wins on setups you spotted but couldn't execute.",
+      "You understand that trading offers real potential, but your biggest enemy isn't lack of knowledge-it's lack of time. You have a job, a business, a family, or other commitments that demand your attention. Markets don't care about your schedule.\n\nYou've experienced the frustration: checking charts during lunch breaks, waking up to missed opportunities, setting alerts that go off during meetings. You watch other traders celebrate wins on setups you spotted but couldn't execute.",
     whyThisCategory:
-      "Your quiz responses show that time scarcity is your primary barrier to trading success. You can't watch markets 24/7, and crypto's global, always-on nature means the best moves often happen while you're sleeping, working, or living your life.\n\nThis isn't a flaw in your trading—it's a flaw in your trading approach. You need strategies and systems designed for people who have lives beyond the charts.",
+      "Your quiz responses show that time scarcity is your primary barrier to trading success. You can't watch markets 24/7, and crypto's global, always-on nature means the best moves often happen while you're sleeping, working, or living your life.\n\nThis isn't a flaw in your trading-it's a flaw in your trading approach. You need strategies and systems designed for people who have lives beyond the charts.",
     challenges: [
       {
         title: 'Missing Prime Opportunities',
@@ -145,12 +145,12 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
       {
         title: '24/7 Market FOMO',
         description:
-          "Crypto never sleeps. Asian session moves, European open volatility, US market correlations—opportunities exist around the clock. You can't be present for all of them.",
+          "Crypto never sleeps. Asian session moves, European open volatility, US market correlations-opportunities exist around the clock. You can't be present for all of them.",
       },
       {
         title: 'Rushed Decisions',
         description:
-          'The little time you have for trading is fragmented—checking charts quickly between meetings or before bed. Rushed analysis leads to poor entries.',
+          'The little time you have for trading is fragmented-checking charts quickly between meetings or before bed. Rushed analysis leads to poor entries.',
       },
       {
         title: 'Incomplete Execution',
@@ -204,7 +204,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
     ],
     transformSection: {
       intro:
-        "The best traders with limited time don't try to compete with full-time chart watchers—they build systems that work independently of their attention.",
+        "The best traders with limited time don't try to compete with full-time chart watchers-they build systems that work independently of their attention.",
       whatTheyDo: [
         'They use automation to execute strategies 24/7 without manual monitoring',
         'They focus on swing trading (multi-day holds) not day trading',
@@ -212,31 +212,31 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
         "They accept they'll miss some opportunities and focus on catching the ones that matter",
       ],
       automationAdvantage:
-        "Many time-starved traders find that automated trading is the solution they needed all along. Instead of trying to be available 24/7, they define a proven strategy once and let it run continuously. The bot watches markets, identifies setups, enters positions, manages risk, and takes profits—all while they focus on their career, family, and life.",
+        "Many time-starved traders find that automated trading is the solution they needed all along. Instead of trying to be available 24/7, they define a proven strategy once and let it run continuously. The bot watches markets, identifies setups, enters positions, manages risk, and takes profits-all while they focus on their career, family, and life.",
     },
     nextSteps: {
       bookTitle: 'The 4-Hour Work Week',
       bookAuthor: 'Tim Ferriss',
       ctaHeadline: 'Ready to Trade 24/7 Without Watching Charts?',
       ctaDescription:
-        'Our automated trading bot executes proven strategies around the clock—capturing opportunities while you sleep, work, and live your life.',
+        'Our automated trading bot executes proven strategies around the clock-capturing opportunities while you sleep, work, and live your life.',
     },
   },
   inconsistent_executor: {
     type: 'inconsistent_executor',
     name: 'The Inconsistent Executor',
-    emoji: '⚡',
-    tagline: 'You know what to do—you just need consistent execution',
+    emoji: '',
+    tagline: 'You know what to do-you just need consistent execution',
     color: '#E0C145',
     bgGradient: 'from-[#E0C145] to-[#FFC440]',
     shortDescription:
       "You have the knowledge and strategy, but execution is your Achilles heel. You know what to do but struggle to follow through consistently. Great news: discipline is a system problem, not a willpower problem.",
     quickTip:
-      "Stop relying on discipline. Create forcing mechanisms—journal every trade before taking it, use alerts instead of watching charts, or automate your strategy completely.",
+      "Stop relying on discipline. Create forcing mechanisms-journal every trade before taking it, use alerts instead of watching charts, or automate your strategy completely.",
     personalityDescription:
-      "You're one of the most frustrating types of trader—because you know what to do. You've studied strategies, you understand risk management, you can spot good setups. Your problem isn't knowledge. It's execution.\n\nYou set rules and break them. You plan trades and second-guess yourself. You backtest strategies and don't follow them live. The gap between what you know you should do and what you actually do is costing you consistent profits.",
+      "You're one of the most frustrating types of trader-because you know what to do. You've studied strategies, you understand risk management, you can spot good setups. Your problem isn't knowledge. It's execution.\n\nYou set rules and break them. You plan trades and second-guess yourself. You backtest strategies and don't follow them live. The gap between what you know you should do and what you actually do is costing you consistent profits.",
     whyThisCategory:
-      "Your quiz responses reveal that discipline and consistency are your primary barriers. You have a plan but don't stick to it. You know your rules but break them in the moment. This isn't about intelligence or knowledge—it's about execution systems.\n\nThe good news? This is a systematic problem with systematic solutions. You don't need more knowledge; you need better systems that ensure you follow through.",
+      "Your quiz responses reveal that discipline and consistency are your primary barriers. You have a plan but don't stick to it. You know your rules but break them in the moment. This isn't about intelligence or knowledge-it's about execution systems.\n\nThe good news? This is a systematic problem with systematic solutions. You don't need more knowledge; you need better systems that ensure you follow through.",
     challenges: [
       {
         title: 'Rule-Breaking in the Moment',
@@ -251,7 +251,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
       {
         title: 'Backtesting vs. Live Trading Gap',
         description:
-          "Your strategy looks great in backtests, but live trading is different. Emotions kick in, you tweak entries, you exit early. The strategy isn't the problem—your inconsistent execution ruins it.",
+          "Your strategy looks great in backtests, but live trading is different. Emotions kick in, you tweak entries, you exit early. The strategy isn't the problem-your inconsistent execution ruins it.",
       },
       {
         title: 'Starting Strong, Finishing Weak',
@@ -273,7 +273,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
       {
         title: 'Capability',
         description:
-          "When you execute properly, you succeed. You've had winning streaks when you followed your rules. This proves you have a viable approach—you just need consistency.",
+          "When you execute properly, you succeed. You've had winning streaks when you followed your rules. This proves you have a viable approach-you just need consistency.",
       },
     ],
     improvementSteps: [
@@ -305,7 +305,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
     ],
     transformSection: {
       intro:
-        "The best traders with your personality type realize that discipline isn't a personality trait—it's a system design problem.",
+        "The best traders with your personality type realize that discipline isn't a personality trait-it's a system design problem.",
       whatTheyDo: [
         'They remove human decision-making at execution time through automation',
         'They use extreme position sizing (tiny risk) to remove emotional pressure',
@@ -313,7 +313,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
         "They accept that willpower fails and build systems that don't require it",
       ],
       automationAdvantage:
-        "Your type benefits most from automation. You have the knowledge and strategy—you just need consistent execution. Automated trading systems execute your rules with perfect discipline, every time. No hesitation on good setups. No breaking stop-losses. No second-guessing.",
+        "Your type benefits most from automation. You have the knowledge and strategy-you just need consistent execution. Automated trading systems execute your rules with perfect discipline, every time. No hesitation on good setups. No breaking stop-losses. No second-guessing.",
     },
     nextSteps: {
       bookTitle: 'Atomic Habits',
@@ -326,16 +326,16 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
   overwhelmed_analyst: {
     type: 'overwhelmed_analyst',
     name: 'The Overwhelmed Analyst',
-    emoji: '📊',
+    emoji: '',
     tagline: 'You need less information, not more',
     color: '#5BD69F',
     bgGradient: 'from-[#5BD69F] to-[#8ACEFE]',
     shortDescription:
-      "You're drowning in information, indicators, and conflicting advice. By the time you analyze everything, the opportunity is gone. What you need isn't more information—it's clarity and simplification.",
+      "You're drowning in information, indicators, and conflicting advice. By the time you analyze everything, the opportunity is gone. What you need isn't more information-it's clarity and simplification.",
     quickTip:
-      'Pick ONE strategy and master it. Remove all indicators except 2-3 essential ones. More analysis doesn\'t equal better results—focused execution does.',
+      'Pick ONE strategy and master it. Remove all indicators except 2-3 essential ones. More analysis doesn\'t equal better results-focused execution does.',
     personalityDescription:
-      "You're drowning in information. Twenty indicators on your charts. Fifty trading educators in your feed. Conflicting strategies, contradictory advice, endless analysis. By the time you've analyzed everything, the opportunity is gone.\n\nYour problem isn't lack of effort—it's too much effort in the wrong direction. You think more analysis equals better trading. It doesn't. More information creates paralysis, not profit.",
+      "You're drowning in information. Twenty indicators on your charts. Fifty trading educators in your feed. Conflicting strategies, contradictory advice, endless analysis. By the time you've analyzed everything, the opportunity is gone.\n\nYour problem isn't lack of effort-it's too much effort in the wrong direction. You think more analysis equals better trading. It doesn't. More information creates paralysis, not profit.",
     whyThisCategory:
       "Your quiz responses show that information overload and analysis paralysis are your primary barriers. You consume endless content but struggle to make clear decisions. You overthink entries, second-guess yourself, and feel confused about what actually works.\n\nThe path forward isn't more knowledge. It's ruthless simplification and focus. You need less information, not more.",
     challenges: [
@@ -364,7 +364,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
       {
         title: 'Research-Oriented',
         description:
-          "Your willingness to learn is admirable. Most traders don't put in 10% of the study effort you do. This foundation is valuable—once you learn to focus it.",
+          "Your willingness to learn is admirable. Most traders don't put in 10% of the study effort you do. This foundation is valuable-once you learn to focus it.",
       },
       {
         title: 'Risk-Aware',
@@ -406,7 +406,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
     ],
     transformSection: {
       intro:
-        "The best traders with your personality type don't \"master complexity\"—they embrace brutal simplification.",
+        "The best traders with your personality type don't \"master complexity\"-they embrace brutal simplification.",
       whatTheyDo: [
         'They use automation or systematic approaches that eliminate subjective analysis',
         'They focus on one simple strategy and execute it repeatedly',

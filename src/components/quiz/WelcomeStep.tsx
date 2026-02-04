@@ -16,7 +16,7 @@ export default function WelcomeStep({ onStart }: WelcomeStepProps) {
       className="text-center max-w-xl mx-auto"
     >
       <div className="mb-6">
-        <span className="text-7xl">📊</span>
+        <span className="text-7xl"></span>
       </div>
       <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
         Discover Your Trading Personality

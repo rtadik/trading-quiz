@@ -17,10 +17,10 @@ interface Stats {
 }
 
 const TYPE_LABELS: Record<string, string> = {
-  emotional_trader: '🎭 Emotional Trader',
-  time_starved_trader: '⏰ Time-Starved Trader',
-  inconsistent_executor: '⚡ Inconsistent Executor',
-  overwhelmed_analyst: '📊 Overwhelmed Analyst',
+  emotional_trader: ' Emotional Trader',
+  time_starved_trader: ' Time-Starved Trader',
+  inconsistent_executor: ' Inconsistent Executor',
+  overwhelmed_analyst: ' Overwhelmed Analyst',
 };
 
 const TYPE_COLORS: Record<string, string> = {
