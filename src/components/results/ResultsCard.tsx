@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { PersonalityTypeInfo } from '@/lib/personality-types';
 
@@ -13,12 +14,46 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
   const pdfUrl = `${appUrl}/api/pdf/${typeInfo.type.replace(/_/g, '-')}?name=${encodeURIComponent(name)}`;
   const communityLink = process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#';
 
+  const [countdown, setCountdown] = useState(15);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          window.location.href = 'https://info.bobe.app';
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
+      {/* Countdown timer */}
+      <motion.div
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="bg-blue-500/20 border border-blue-500/30 rounded-xl p-4 mb-6 text-center"
+      >
+        <div className="flex items-center justify-center gap-3">
+          <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <p className="text-white text-sm font-medium">
+            Redirecting to your dashboard in <span className="text-blue-400 font-bold text-lg">{countdown}</span> seconds...
+          </p>
+        </div>
+      </motion.div>
+
       {/* Celebration header */}
       <div className="text-center mb-8">
         <motion.div

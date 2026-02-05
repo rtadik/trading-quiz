@@ -4,24 +4,20 @@ import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import { QUIZ_QUESTIONS } from '@/lib/quiz-questions';
-import WelcomeStep from './WelcomeStep';
 import TextInputStep from './TextInputStep';
 import EmailInputStep from './EmailInputStep';
 import MultipleChoiceStep from './MultipleChoiceStep';
 import ProgressBar from './ProgressBar';
 
-type QuizState = 'welcome' | 'questions' | 'submitting';
+type QuizState = 'questions' | 'submitting';
 
 export default function QuizContainer() {
   const router = useRouter();
-  const [state, setState] = useState<QuizState>('welcome');
+  const [state, setState] = useState<QuizState>('questions');
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [error, setError] = useState('');
 
-  const handleStart = () => {
-    setState('questions');
-  };
 
   const handleAnswer = (questionId: string, value: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
@@ -58,13 +54,6 @@ export default function QuizContainer() {
     }
   };
 
-  if (state === 'welcome') {
-    return (
-      <AnimatePresence mode="wait">
-        <WelcomeStep onStart={handleStart} />
-      </AnimatePresence>
-    );
-  }
 
   if (state === 'submitting') {
     return (
