@@ -13,9 +13,15 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20');
     const type = searchParams.get('type') || undefined;
     const search = searchParams.get('search') || undefined;
+    const experienceLevel = searchParams.get('experience') || undefined;
+    const performance = searchParams.get('performance') || undefined;
+    const automationExperience = searchParams.get('automation') || undefined;
 
     const where: Record<string, unknown> = {};
     if (type) where.personalityType = type;
+    if (experienceLevel) where.experienceLevel = experienceLevel;
+    if (performance) where.performance = performance;
+    if (automationExperience) where.automationExperience = automationExperience;
     if (search) {
       where.OR = [
         { email: { contains: search } },

@@ -89,7 +89,7 @@ function PDFReport({ type, name }: PDFReportProps) {
         <Text style={styles.pageTitle}>Your Biggest Challenges</Text>
         {info.challenges.map((challenge, i) => (
           <View key={i} style={styles.challengeBox}>
-            <Text style={styles.challengeTitle}>Challenge #{i + 1}: {challenge.title}</Text>
+            <Text style={styles.challengeTitle}>⚠️ Challenge #{i + 1}: {challenge.title}</Text>
             <Text style={styles.challengeText}>{challenge.description}</Text>
           </View>
         ))}
@@ -105,7 +105,7 @@ function PDFReport({ type, name }: PDFReportProps) {
         </Text>
         {info.strengths.map((strength, i) => (
           <View key={i} style={[styles.strengthBox, { backgroundColor: typeColors.light }]}>
-            <Text style={[styles.challengeTitle, { color: typeColors.accent }]}>Strength #{i + 1}: {strength.title}</Text>
+            <Text style={[styles.challengeTitle, { color: typeColors.accent }]}>✅ Strength #{i + 1}: {strength.title}</Text>
             <Text style={styles.challengeText}>{strength.description}</Text>
           </View>
         ))}
@@ -116,13 +116,16 @@ function PDFReport({ type, name }: PDFReportProps) {
       <Page size="A4" style={styles.page}>
         <View style={[styles.colorBar, { backgroundColor: typeColors.primary }]} />
         <Text style={styles.pageTitle}>Your Actionable Improvement Plan</Text>
-        {info.improvementSteps.map((step, i) => (
-          <View key={i} style={[styles.stepBox, { borderLeftColor: typeColors.primary }]}>
-            <Text style={[styles.stepNumber, { color: typeColors.primary }]}>STEP {i + 1}</Text>
-            <Text style={styles.stepTitle}>{step.title}</Text>
-            <Text style={styles.stepText}>{step.description}</Text>
-          </View>
-        ))}
+        {info.improvementSteps.map((step, i) => {
+          const stepEmojis = ['1️⃣', '2️⃣', '3️⃣', '4️⃣', '5️⃣'];
+          return (
+            <View key={i} style={[styles.stepBox, { borderLeftColor: typeColors.primary }]}>
+              <Text style={[styles.stepNumber, { color: typeColors.primary }]}>STEP {i + 1}</Text>
+              <Text style={styles.stepTitle}>{stepEmojis[i]} {step.title}</Text>
+              <Text style={styles.stepText}>{step.description}</Text>
+            </View>
+          );
+        })}
         <Text style={styles.footer}>Page 5 | {info.name}</Text>
       </Page>
 
@@ -136,7 +139,7 @@ function PDFReport({ type, name }: PDFReportProps) {
           <Text key={i} style={styles.bulletItem}>• {item}</Text>
         ))}
         <View style={styles.automationBox}>
-          <Text style={styles.automationTitle}>The Automation Advantage</Text>
+          <Text style={styles.automationTitle}>🤖 The Automation Advantage</Text>
           <Text style={styles.automationText}>{info.transformSection.automationAdvantage}</Text>
         </View>
         <Text style={styles.footer}>Page 6 | {info.name}</Text>
@@ -155,7 +158,7 @@ function PDFReport({ type, name }: PDFReportProps) {
           Connect with other traders working to improve their consistency. Share wins, learn from losses, get accountability.
         </Text>
         <View style={styles.ctaBox}>
-          <Text style={styles.ctaTitle}>{info.nextSteps.ctaHeadline}</Text>
+          <Text style={styles.ctaTitle}>💡 {info.nextSteps.ctaHeadline}</Text>
           <Text style={styles.ctaText}>{info.nextSteps.ctaDescription}</Text>
         </View>
         <Text style={[styles.paragraph, { marginTop: 20, textAlign: 'center', color: '#6b7280' }]}>

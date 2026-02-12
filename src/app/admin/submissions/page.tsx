@@ -36,6 +36,9 @@ export default function SubmissionsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [typeFilter, setTypeFilter] = useState('');
+  const [experienceFilter, setExperienceFilter] = useState('');
+  const [performanceFilter, setPerformanceFilter] = useState('');
+  const [automationFilter, setAutomationFilter] = useState('');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -43,6 +46,9 @@ export default function SubmissionsPage() {
     setLoading(true);
     const params = new URLSearchParams({ page: String(page), limit: '20' });
     if (typeFilter) params.set('type', typeFilter);
+    if (experienceFilter) params.set('experience', experienceFilter);
+    if (performanceFilter) params.set('performance', performanceFilter);
+    if (automationFilter) params.set('automation', automationFilter);
     if (search) params.set('search', search);
 
     fetch(`/api/admin/submissions?${params}`)
@@ -64,7 +70,7 @@ export default function SubmissionsPage() {
       .catch(() => {
         router.push('/admin/login');
       });
-  }, [page, typeFilter, search, router]);
+  }, [page, typeFilter, experienceFilter, performanceFilter, automationFilter, search, router]);
 
   return (
     <main className="min-h-screen p-6">
@@ -96,10 +102,42 @@ export default function SubmissionsPage() {
             className="bg-white/5 border border-white/20 text-white px-4 py-2 rounded-lg text-sm focus:border-blue-500 appearance-none cursor-pointer"
           >
             <option value="">All Types</option>
-            <option value="emotional_trader"> Emotional Trader</option>
-            <option value="time_starved_trader"> Time-Starved Trader</option>
-            <option value="inconsistent_executor"> Inconsistent Executor</option>
-            <option value="overwhelmed_analyst"> Overwhelmed Analyst</option>
+            <option value="emotional_trader">🔥 Emotional Trader</option>
+            <option value="time_starved_trader">⏰ Time-Starved Trader</option>
+            <option value="inconsistent_executor">🎯 Inconsistent Executor</option>
+            <option value="overwhelmed_analyst">🧠 Overwhelmed Analyst</option>
+          </select>
+          <select
+            value={experienceFilter}
+            onChange={(e) => { setExperienceFilter(e.target.value); setPage(1); }}
+            className="bg-white/5 border border-white/20 text-white px-4 py-2 rounded-lg text-sm focus:border-blue-500 appearance-none cursor-pointer"
+          >
+            <option value="">All Experience</option>
+            <option value="beginner">Beginner (&lt;6 months)</option>
+            <option value="intermediate">Intermediate (6mo-2yr)</option>
+            <option value="experienced">Experienced (2+ years)</option>
+          </select>
+          <select
+            value={performanceFilter}
+            onChange={(e) => { setPerformanceFilter(e.target.value); setPage(1); }}
+            className="bg-white/5 border border-white/20 text-white px-4 py-2 rounded-lg text-sm focus:border-blue-500 appearance-none cursor-pointer"
+          >
+            <option value="">All Performance</option>
+            <option value="struggling">Struggling</option>
+            <option value="breaking_even">Breaking Even</option>
+            <option value="inconsistent_profit">Inconsistent Profit</option>
+            <option value="undisclosed">Undisclosed</option>
+          </select>
+          <select
+            value={automationFilter}
+            onChange={(e) => { setAutomationFilter(e.target.value); setPage(1); }}
+            className="bg-white/5 border border-white/20 text-white px-4 py-2 rounded-lg text-sm focus:border-blue-500 appearance-none cursor-pointer"
+          >
+            <option value="">All Automation</option>
+            <option value="automation_newbie">Newbie (Never tried)</option>
+            <option value="automation_skeptic">Skeptic (Didn&apos;t work)</option>
+            <option value="automation_ready">Ready (Interested)</option>
+            <option value="automation_user">User (Currently using)</option>
           </select>
         </div>
 

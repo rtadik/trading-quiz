@@ -5,7 +5,7 @@ export default function Home() {
     <main className="min-h-screen flex items-center justify-center p-4">
       <div className="max-w-2xl mx-auto text-center">
         <div className="mb-8">
-          <span className="text-6xl"></span>
+          <span className="text-6xl">📈</span>
         </div>
         <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
           What Type of Trader Are You?

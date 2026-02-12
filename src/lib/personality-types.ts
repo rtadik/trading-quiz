@@ -23,7 +23,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
   emotional_trader: {
     type: 'emotional_trader',
     name: 'The Emotional Trader',
-    emoji: '',
+    emoji: '🎭',
     tagline: 'Your emotions are sabotaging your success',
     color: '#FF4FDA',
     bgGradient: 'from-pink-dark to-pink-light',
@@ -124,7 +124,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
   time_starved_trader: {
     type: 'time_starved_trader',
     name: 'The Time-Starved Trader',
-    emoji: '',
+    emoji: '⏰',
     tagline: 'You need a solution that works while you sleep',
     color: '#49ACF2',
     bgGradient: 'from-blue-dark to-blue-light',
@@ -225,7 +225,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
   inconsistent_executor: {
     type: 'inconsistent_executor',
     name: 'The Inconsistent Executor',
-    emoji: '',
+    emoji: '⚡',
     tagline: 'You know what to do-you just need consistent execution',
     color: '#E0C145',
     bgGradient: 'from-[#E0C145] to-[#FFC440]',
@@ -326,7 +326,7 @@ export const PERSONALITY_TYPES: Record<PersonalityType, PersonalityTypeInfo> = {
   overwhelmed_analyst: {
     type: 'overwhelmed_analyst',
     name: 'The Overwhelmed Analyst',
-    emoji: '',
+    emoji: '📊',
     tagline: 'You need less information, not more',
     color: '#5BD69F',
     bgGradient: 'from-[#5BD69F] to-[#8ACEFE]',
