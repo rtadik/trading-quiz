@@ -51,3 +51,7 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   return handleRequest(request);
 }
+
+export async function HEAD(request: NextRequest) {
+  return handleRequest(request);
+}
