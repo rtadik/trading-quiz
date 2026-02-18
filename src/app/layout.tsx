@@ -21,7 +21,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <header className="w-full px-6 py-4 flex justify-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-BoBe.svg" alt="BoBe" height={40} />
+          <img src="/logo-BoBe.svg" alt="BoBe" style={{ height: '48px', width: 'auto' }} />
         </header>
         {children}
         <Analytics />
