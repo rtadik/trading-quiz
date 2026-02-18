@@ -3,7 +3,7 @@ import { Inter } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin', 'cyrillic'] });
 
 export const metadata: Metadata = {
   title: 'Trading Personality Quiz - Discover Your Trading Type',
@@ -19,6 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <header className="w-full px-6 py-4 flex justify-center">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-BoBe.svg" alt="BoBe" height={40} />
+        </header>
         {children}
         <Analytics />
       </body>

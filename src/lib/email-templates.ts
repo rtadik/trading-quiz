@@ -38,6 +38,9 @@ function wrapInEmailLayout(content: string): string {
       ${content}
     </div>
     <div class="footer">
+      <p style="margin-bottom:20px"><a href="https://bobe.app" class="cta">Visit BoBe.app →</a></p>
+      <p>Or go directly to <a href="https://bobe.app">bobe.app</a></p>
+      <hr class="divider">
       <p><strong>${process.env.SENDER_NAME || 'Trading Quiz'}</strong><br>Helping traders improve their results</p>
     </div>
   </div>

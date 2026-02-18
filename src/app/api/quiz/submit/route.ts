@@ -6,7 +6,8 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    const { first_name, email, experience_level, performance, biggest_challenge, decision_style, automation_experience } = body;
+    const { first_name, email, experience_level, performance, biggest_challenge, decision_style, automation_experience, locale } = body;
+    const emailLocale: string = locale === 'ru' ? 'ru' : 'en';
 
     // Validate required fields
     if (!first_name || !email || !experience_level || !performance || !biggest_challenge || !decision_style || !automation_experience) {
@@ -71,7 +72,12 @@ export async function POST(request: NextRequest) {
       const brevoApiKey = process.env.BREVO_API_KEY;
       if (brevoApiKey) {
         const { createBrevoContact, sendTransactionalEmail } = await import('@/lib/brevo');
-        const { getEmailTemplate } = await import('@/lib/email-templates');
+        const templateModule = emailLocale === 'ru'
+          ? await import('@/lib/email-templates-ru')
+          : await import('@/lib/email-templates');
+        const getEmailTemplate = emailLocale === 'ru'
+          ? (templateModule as typeof import('@/lib/email-templates-ru')).getEmailTemplateRu
+          : (templateModule as typeof import('@/lib/email-templates')).getEmailTemplate;
 
         // Create contact in Brevo
         await createBrevoContact({

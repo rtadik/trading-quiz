@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { QUIZ_QUESTIONS } from '@/lib/quiz-questions';
+import { QUIZ_QUESTIONS, QuizQuestion } from '@/lib/quiz-questions';
 import TextInputStep from './TextInputStep';
 import EmailInputStep from './EmailInputStep';
 import MultipleChoiceStep from './MultipleChoiceStep';
@@ -11,7 +11,17 @@ import ProgressBar from './ProgressBar';
 
 type QuizState = 'questions' | 'submitting';
 
-export default function QuizContainer() {
+interface QuizContainerProps {
+  questions?: QuizQuestion[];
+  resultsBasePath?: string;
+  locale?: string;
+}
+
+export default function QuizContainer({
+  questions = QUIZ_QUESTIONS,
+  resultsBasePath = '/results',
+  locale = 'en',
+}: QuizContainerProps) {
   const router = useRouter();
   const [state, setState] = useState<QuizState>('questions');
   const [currentStep, setCurrentStep] = useState(0);
@@ -22,7 +32,7 @@ export default function QuizContainer() {
   const handleAnswer = (questionId: string, value: string) => {
     setAnswers((prev) => ({ ...prev, [questionId]: value }));
 
-    if (currentStep < QUIZ_QUESTIONS.length - 1) {
+    if (currentStep < questions.length - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
       handleSubmit({ ...answers, [questionId]: value });
@@ -37,7 +47,7 @@ export default function QuizContainer() {
       const res = await fetch('/api/quiz/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(finalAnswers),
+        body: JSON.stringify({ ...finalAnswers, locale }),
       });
 
       if (!res.ok) {
@@ -47,7 +57,7 @@ export default function QuizContainer() {
 
       const data = await res.json();
       const slug = data.personalityType.replace(/_/g, '-');
-      router.push(`/results/${slug}?name=${encodeURIComponent(finalAnswers.first_name)}`);
+      router.push(`${resultsBasePath}/${slug}?name=${encodeURIComponent(finalAnswers.first_name)}`);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
       setState('questions');
@@ -60,20 +70,20 @@ export default function QuizContainer() {
       <div className="text-center max-w-lg mx-auto">
         <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto mb-6" />
         <h2 className="text-2xl font-bold text-white mb-2">
-          Analyzing your responses...
+          {locale === 'ru' ? 'Анализируем ваши ответы...' : 'Analyzing your responses...'}
         </h2>
         <p className="text-gray-400">
-          Calculating your trading personality type
+          {locale === 'ru' ? 'Определяем ваш тип торговой личности' : 'Calculating your trading personality type'}
         </p>
       </div>
     );
   }
 
-  const question = QUIZ_QUESTIONS[currentStep];
+  const question = questions[currentStep];
 
   return (
     <div>
-      <ProgressBar current={currentStep + 1} total={QUIZ_QUESTIONS.length} />
+      <ProgressBar current={currentStep + 1} total={questions.length} />
 
       {error && (
         <div className="mb-6 bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm">

@@ -71,12 +71,20 @@ export default function AdminDashboard() {
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
-          <Link
-            href="/admin/submissions"
-            className="bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition-colors"
-          >
-            View All Submissions
-          </Link>
+          <div className="flex gap-3">
+            <Link
+              href="/admin/emails"
+              className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-semibold"
+            >
+              📧 Email Campaign Manager
+            </Link>
+            <Link
+              href="/admin/submissions"
+              className="bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition-colors"
+            >
+              View All Submissions
+            </Link>
+          </div>
         </div>
 
         {/* KPI Cards */}
