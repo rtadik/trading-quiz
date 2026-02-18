@@ -63,6 +63,12 @@ export async function GET() {
       _count: { automationExperience: true },
     });
 
+    // Locale distribution (EN vs RU)
+    const localeDistribution = await prisma.contact.groupBy({
+      by: ['locale'],
+      _count: { locale: true },
+    });
+
     return NextResponse.json({
       totalContacts,
       todayContacts,
@@ -81,6 +87,10 @@ export async function GET() {
       automationDistribution: automationDistribution.map((a) => ({
         experience: a.automationExperience,
         count: a._count.automationExperience,
+      })),
+      localeDistribution: localeDistribution.map((l) => ({
+        locale: l.locale,
+        count: l._count.locale,
       })),
     });
   } catch (error) {

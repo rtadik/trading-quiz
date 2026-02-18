@@ -12,6 +12,7 @@ interface Contact {
   experienceLevel: string;
   performance: string;
   automationExperience: string;
+  locale: string;
   createdAt: string;
   emails: { emailNumber: number; status: string; scheduledAt: string; sentAt: string | null }[];
 }
@@ -39,6 +40,7 @@ export default function SubmissionsPage() {
   const [experienceFilter, setExperienceFilter] = useState('');
   const [performanceFilter, setPerformanceFilter] = useState('');
   const [automationFilter, setAutomationFilter] = useState('');
+  const [localeFilter, setLocaleFilter] = useState('');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -49,6 +51,7 @@ export default function SubmissionsPage() {
     if (experienceFilter) params.set('experience', experienceFilter);
     if (performanceFilter) params.set('performance', performanceFilter);
     if (automationFilter) params.set('automation', automationFilter);
+    if (localeFilter) params.set('locale', localeFilter);
     if (search) params.set('search', search);
 
     fetch(`/api/admin/submissions?${params}`)
@@ -70,7 +73,7 @@ export default function SubmissionsPage() {
       .catch(() => {
         router.push('/admin/login');
       });
-  }, [page, typeFilter, experienceFilter, performanceFilter, automationFilter, search, router]);
+  }, [page, typeFilter, experienceFilter, performanceFilter, automationFilter, localeFilter, search, router]);
 
   return (
     <main className="min-h-screen p-6">
@@ -139,6 +142,15 @@ export default function SubmissionsPage() {
             <option value="automation_ready">Ready (Interested)</option>
             <option value="automation_user">User (Currently using)</option>
           </select>
+          <select
+            value={localeFilter}
+            onChange={(e) => { setLocaleFilter(e.target.value); setPage(1); }}
+            className="bg-white/5 border border-white/20 text-white px-4 py-2 rounded-lg text-sm focus:border-blue-500 appearance-none cursor-pointer"
+          >
+            <option value="">🌐 All Languages</option>
+            <option value="en">🇬🇧 English</option>
+            <option value="ru">🇷🇺 Russian</option>
+          </select>
         </div>
 
         {/* Table */}
@@ -149,6 +161,7 @@ export default function SubmissionsPage() {
                 <tr className="border-b border-white/10">
                   <th className="text-left text-gray-400 font-medium px-4 py-3">Name</th>
                   <th className="text-left text-gray-400 font-medium px-4 py-3">Email</th>
+                  <th className="text-left text-gray-400 font-medium px-4 py-3">Lang</th>
                   <th className="text-left text-gray-400 font-medium px-4 py-3">Type</th>
                   <th className="text-left text-gray-400 font-medium px-4 py-3">Experience</th>
                   <th className="text-left text-gray-400 font-medium px-4 py-3">Performance</th>
@@ -160,11 +173,11 @@ export default function SubmissionsPage() {
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan={8} className="text-center text-gray-500 py-8">Loading...</td>
+                    <td colSpan={9} className="text-center text-gray-500 py-8">Loading...</td>
                   </tr>
                 ) : contacts.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="text-center text-gray-500 py-8">No submissions found</td>
+                    <td colSpan={9} className="text-center text-gray-500 py-8">No submissions found</td>
                   </tr>
                 ) : (
                   contacts.map((contact) => {
@@ -174,6 +187,11 @@ export default function SubmissionsPage() {
                       <tr key={contact.id} className="border-b border-white/5 hover:bg-white/5 transition-colors">
                         <td className="px-4 py-3 text-white">{contact.firstName}</td>
                         <td className="px-4 py-3 text-gray-300">{contact.email}</td>
+                        <td className="px-4 py-3">
+                          <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${contact.locale === 'ru' ? 'bg-blue-500/20 text-blue-300' : 'bg-gray-500/20 text-gray-300'}`}>
+                            {contact.locale === 'ru' ? '🇷🇺 RU' : '🇬🇧 EN'}
+                          </span>
+                        </td>
                         <td className="px-4 py-3">
                           <span className="text-gray-300">{TYPE_LABELS[contact.personalityType] || contact.personalityType}</span>
                         </td>

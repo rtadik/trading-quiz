@@ -14,6 +14,7 @@ interface Stats {
   submissionsByDate: Record<string, number>;
   experienceDistribution: { level: string; count: number }[];
   automationDistribution: { experience: string; count: number }[];
+  localeDistribution: { locale: string; count: number }[];
 }
 
 const TYPE_LABELS: Record<string, string> = {
@@ -64,6 +65,8 @@ export default function AdminDashboard() {
   if (!stats) return null;
 
   const totalTypes = stats.typeDistribution.reduce((sum, t) => sum + t.count, 0);
+  const enCount = stats.localeDistribution.find((l) => l.locale === 'en')?.count ?? 0;
+  const ruCount = stats.localeDistribution.find((l) => l.locale === 'ru')?.count ?? 0;
 
   return (
     <main className="min-h-screen p-6">
@@ -88,7 +91,7 @@ export default function AdminDashboard() {
         </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
           <div className="bg-white/5 border border-white/10 rounded-xl p-6">
             <p className="text-gray-400 text-sm">Total Submissions</p>
             <p className="text-3xl font-bold text-white mt-1">{stats.totalContacts}</p>
@@ -107,6 +110,24 @@ export default function AdminDashboard() {
             {stats.emailsFailed > 0 && (
               <p className="text-red-400 text-xs mt-1">{stats.emailsFailed} failed</p>
             )}
+          </div>
+        </div>
+
+        {/* EN / RU split */}
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          <div className="bg-white/5 border border-white/10 rounded-xl p-6 flex items-center gap-4">
+            <span className="text-3xl">🇬🇧</span>
+            <div>
+              <p className="text-gray-400 text-sm">English (EN)</p>
+              <p className="text-2xl font-bold text-white mt-0.5">{enCount}</p>
+            </div>
+          </div>
+          <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-6 flex items-center gap-4">
+            <span className="text-3xl">🇷🇺</span>
+            <div>
+              <p className="text-gray-400 text-sm">Russian /moscow (RU)</p>
+              <p className="text-2xl font-bold text-blue-300 mt-0.5">{ruCount}</p>
+            </div>
           </div>
         </div>
 

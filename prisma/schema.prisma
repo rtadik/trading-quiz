@@ -19,6 +19,7 @@ model Contact {
   biggestChallenge     String
   decisionStyle        String
   scores               String   // JSON string
+  locale               String   @default("en")
   brevoContactId       String?
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt

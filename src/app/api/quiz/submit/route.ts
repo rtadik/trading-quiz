@@ -35,6 +35,7 @@ export async function POST(request: NextRequest) {
         biggestChallenge: biggest_challenge,
         decisionStyle: decision_style,
         scores: JSON.stringify(scores),
+        locale: emailLocale,
       },
       update: {
         firstName: first_name,
@@ -45,6 +46,7 @@ export async function POST(request: NextRequest) {
         biggestChallenge: biggest_challenge,
         decisionStyle: decision_style,
         scores: JSON.stringify(scores),
+        locale: emailLocale,
       },
     });
 
