@@ -15,12 +15,14 @@ interface QuizContainerProps {
   questions?: QuizQuestion[];
   resultsBasePath?: string;
   locale?: string;
+  formId?: string;
 }
 
 export default function QuizContainer({
   questions = QUIZ_QUESTIONS,
   resultsBasePath = '/results',
   locale = 'en',
+  formId,
 }: QuizContainerProps) {
   const router = useRouter();
   const [state, setState] = useState<QuizState>('questions');
@@ -47,7 +49,7 @@ export default function QuizContainer({
       const res = await fetch('/api/quiz/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...finalAnswers, locale }),
+        body: JSON.stringify({ ...finalAnswers, locale, ...(formId && { formId }) }),
       });
 
       if (!res.ok) {

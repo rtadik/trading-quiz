@@ -1,50 +1,181 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
-import { calculatePersonalityType } from '@/lib/scoring';
+import { calculatePersonalityType, type PersonalityType } from '@/lib/scoring';
+
+// Dynamic scoring using form's scoring config from DB
+function calculateFromFormScoring(
+  answers: Record<string, string>,
+  questions: { questionKey: string; scoringWeight: number; scoringMap: string | null }[]
+): { type: PersonalityType; scores: Record<PersonalityType, number> } {
+  const scores: Record<PersonalityType, number> = {
+    emotional_trader: 0,
+    time_starved_trader: 0,
+    inconsistent_executor: 0,
+    overwhelmed_analyst: 0,
+  };
+
+  let highestWeightQuestion: { key: string; weight: number } | null = null;
+
+  for (const q of questions) {
+    if (q.scoringWeight === 0 || !q.scoringMap) continue;
+
+    const answer = answers[q.questionKey];
+    if (!answer) continue;
+
+    const scoringMap: Record<string, Record<string, number>> = JSON.parse(q.scoringMap);
+    const answerScores = scoringMap[answer];
+    if (!answerScores) continue;
+
+    for (const [personalityType, points] of Object.entries(answerScores)) {
+      if (personalityType in scores) {
+        scores[personalityType as PersonalityType] += points;
+      }
+    }
+
+    if (!highestWeightQuestion || q.scoringWeight > highestWeightQuestion.weight) {
+      highestWeightQuestion = { key: q.questionKey, weight: q.scoringWeight };
+    }
+  }
+
+  // Find highest score
+  let maxScore = 0;
+  let maxType: PersonalityType = 'emotional_trader';
+  let hasTie = false;
+
+  for (const [type, score] of Object.entries(scores)) {
+    if (score > maxScore) {
+      maxScore = score;
+      maxType = type as PersonalityType;
+      hasTie = false;
+    } else if (score === maxScore && score > 0) {
+      hasTie = true;
+    }
+  }
+
+  // Tiebreaker: use answer from highest-weighted question
+  if (hasTie && highestWeightQuestion) {
+    const tieAnswer = answers[highestWeightQuestion.key];
+    if (tieAnswer) {
+      const tieQuestion = questions.find((q) => q.questionKey === highestWeightQuestion!.key);
+      if (tieQuestion?.scoringMap) {
+        const tieMap: Record<string, Record<string, number>> = JSON.parse(tieQuestion.scoringMap);
+        const tieScores = tieMap[tieAnswer];
+        if (tieScores) {
+          // Pick the type with highest points in tiebreaker question
+          let tieMax = 0;
+          for (const [type, points] of Object.entries(tieScores)) {
+            if (points > tieMax && type in scores) {
+              tieMax = points;
+              maxType = type as PersonalityType;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return { type: maxType, scores };
+}
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-
-    const { first_name, email, experience_level, performance, biggest_challenge, decision_style, automation_experience, locale } = body;
+    const { formId, locale } = body;
     const emailLocale: string = locale === 'ru' ? 'ru' : 'en';
 
-    // Validate required fields
-    if (!first_name || !email || !experience_level || !performance || !biggest_challenge || !decision_style || !automation_experience) {
-      return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
-    }
+    let personalityType: string;
+    let scores: Record<string, number>;
+    let firstName: string;
+    let email: string;
+    let experienceLevel: string;
+    let performance: string;
+    let automationExperience: string;
+    let biggestChallenge: string;
+    let decisionStyle: string;
 
-    // Validate email format
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
-    }
+    if (formId) {
+      // Dynamic form submission
+      const form = await prisma.quizForm.findUnique({
+        where: { id: formId },
+        include: { questions: { orderBy: { position: 'asc' } } },
+      });
 
-    // Calculate personality type
-    const { type: personalityType, scores } = calculatePersonalityType(biggest_challenge, decision_style);
+      if (!form) {
+        return NextResponse.json({ error: 'Form not found' }, { status: 404 });
+      }
+
+      // Validate required fields from form questions
+      for (const q of form.questions) {
+        if (q.required && !body[q.questionKey]) {
+          return NextResponse.json({ error: `Field "${q.questionKey}" is required` }, { status: 400 });
+        }
+      }
+
+      firstName = body.first_name || body.firstName || '';
+      email = body.email || '';
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        return NextResponse.json({ error: 'Valid email is required' }, { status: 400 });
+      }
+
+      // Calculate personality type using form's scoring config
+      const result = calculateFromFormScoring(body, form.questions);
+      personalityType = result.type;
+      scores = result.scores;
+
+      // Map known fields, default to 'unknown' for missing standard fields
+      experienceLevel = body.experience_level || 'unknown';
+      performance = body.performance || 'unknown';
+      automationExperience = body.automation_experience || 'unknown';
+      biggestChallenge = body.biggest_challenge || 'unknown';
+      decisionStyle = body.decision_style || 'unknown';
+    } else {
+      // Legacy hardcoded submission
+      const { first_name, email: emailVal, experience_level, performance: perf, biggest_challenge, decision_style, automation_experience } = body;
+
+      if (!first_name || !emailVal || !experience_level || !perf || !biggest_challenge || !decision_style || !automation_experience) {
+        return NextResponse.json({ error: 'All fields are required' }, { status: 400 });
+      }
+
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+        return NextResponse.json({ error: 'Invalid email address' }, { status: 400 });
+      }
+
+      const result = calculatePersonalityType(biggest_challenge, decision_style);
+      personalityType = result.type;
+      scores = result.scores;
+      firstName = first_name;
+      email = emailVal;
+      experienceLevel = experience_level;
+      performance = perf;
+      automationExperience = automation_experience;
+      biggestChallenge = biggest_challenge;
+      decisionStyle = decision_style;
+    }
 
     // Upsert contact
     const contact = await prisma.contact.upsert({
       where: { email },
       create: {
         email,
-        firstName: first_name,
+        firstName,
         personalityType,
-        experienceLevel: experience_level,
+        experienceLevel,
         performance,
-        automationExperience: automation_experience,
-        biggestChallenge: biggest_challenge,
-        decisionStyle: decision_style,
+        automationExperience,
+        biggestChallenge,
+        decisionStyle,
         scores: JSON.stringify(scores),
         locale: emailLocale,
       },
       update: {
-        firstName: first_name,
+        firstName,
         personalityType,
-        experienceLevel: experience_level,
+        experienceLevel,
         performance,
-        automationExperience: automation_experience,
-        biggestChallenge: biggest_challenge,
-        decisionStyle: decision_style,
+        automationExperience,
+        biggestChallenge,
+        decisionStyle,
         scores: JSON.stringify(scores),
         locale: emailLocale,
       },
@@ -84,20 +215,20 @@ export async function POST(request: NextRequest) {
         // Create contact in Brevo
         await createBrevoContact({
           email,
-          firstName: first_name,
+          firstName,
           personalityType,
-          experienceLevel: experience_level,
+          experienceLevel,
           performance,
-          automationExperience: automation_experience,
+          automationExperience,
         });
 
         // Send immediate welcome email (Email #1)
-        const emailTemplate = getEmailTemplate(personalityType, 1);
+        const emailTemplate = getEmailTemplate(personalityType as PersonalityType, 1);
         if (emailTemplate) {
-          const { subject, html } = emailTemplate(first_name);
+          const { subject, html } = emailTemplate(firstName);
           await sendTransactionalEmail({
             to: email,
-            toName: first_name,
+            toName: firstName,
             subject,
             htmlContent: html,
           });

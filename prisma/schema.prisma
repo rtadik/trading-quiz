@@ -75,3 +75,38 @@ model EmailCampaign {
   @@index([status])
   @@index([createdAt])
 }
+
+model QuizForm {
+  id          String             @id @default(cuid())
+  name        String             // Display name (e.g., "English Default", "Russian Default")
+  slug        String             @unique // URL slug (e.g., "en-default", "ru-default", "crypto-traders")
+  locale      String             @default("en")
+  description String?            // Admin-only notes
+  status      String             @default("draft") // "draft" or "published"
+  resultsPath String             @default("/results") // Base path for results
+  createdAt   DateTime           @default(now())
+  updatedAt   DateTime           @updatedAt
+  questions   QuizFormQuestion[]
+
+  @@index([status])
+}
+
+model QuizFormQuestion {
+  id            String   @id @default(cuid())
+  formId        String
+  form          QuizForm @relation(fields: [formId], references: [id], onDelete: Cascade)
+  questionKey   String   // Internal key (e.g., "first_name", "email", "biggest_challenge")
+  type          String   // "text", "email", "multiple_choice"
+  question      String   // Display text
+  placeholder   String?  // For text/email inputs
+  options       String?  @db.Text // JSON array: [{ "value": "...", "label": "..." }]
+  position      Int      // Order in quiz (0-indexed)
+  required      Boolean  @default(true)
+  scoringWeight Int      @default(0) // 0 = not scored, 3 = primary, etc.
+  scoringMap    String?  @db.Text // JSON: { "answer_value": { "personality_type": points } }
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([formId, position])
+  @@index([formId])
+}

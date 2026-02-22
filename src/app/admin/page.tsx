@@ -76,16 +76,22 @@ export default function AdminDashboard() {
           <h1 className="text-3xl font-bold text-white">Admin Dashboard</h1>
           <div className="flex gap-3">
             <Link
+              href="/admin/forms"
+              className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all font-semibold"
+            >
+              Quiz Forms
+            </Link>
+            <Link
               href="/admin/emails"
               className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all font-semibold"
             >
-              📧 Email Campaign Manager
+              Email Campaigns
             </Link>
             <Link
               href="/admin/submissions"
               className="bg-white/10 text-white px-4 py-2 rounded-lg hover:bg-white/20 transition-colors"
             >
-              View All Submissions
+              Submissions
             </Link>
           </div>
         </div>
