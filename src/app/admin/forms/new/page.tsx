@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import HelpTooltip from '@/components/admin/HelpTooltip';
 
 interface FormSummary {
   id: string;
@@ -78,9 +79,16 @@ export default function NewFormPage() {
     <main className="min-h-screen p-6">
       <div className="max-w-2xl mx-auto">
         <Link href="/admin/forms" className="text-gray-400 hover:text-white text-sm mb-4 inline-block">
-          &larr; Back to Forms
+          &larr; Back to Quiz Forms
         </Link>
-        <h1 className="text-3xl font-bold text-white mb-8">Create New Quiz Form</h1>
+        <h1 className="text-3xl font-bold text-white mb-4">Create New Quiz</h1>
+
+        {/* Help banner */}
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl px-5 py-4 mb-8">
+          <p className="text-blue-300 text-sm">
+            Fill in the basics below, then you&apos;ll be taken to the editor to add questions and set up scoring.
+          </p>
+        </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {error && (
@@ -90,7 +98,10 @@ export default function NewFormPage() {
           )}
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Form Name</label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Quiz Name
+              <HelpTooltip text="Give your quiz a name (e.g., 'English Trading Quiz'). Only you see this — quiz takers won't." />
+            </label>
             <input
               type="text"
               value={name}
@@ -103,7 +114,8 @@ export default function NewFormPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              URL Slug <span className="text-gray-500">(auto-generated, editable)</span>
+              URL Path
+              <HelpTooltip text="This becomes the quiz link: yoursite.com/q/this-value. Use lowercase letters and hyphens only. It's auto-generated from the name above." />
             </label>
             <div className="flex items-center gap-2">
               <span className="text-gray-500">/q/</span>
@@ -116,27 +128,34 @@ export default function NewFormPage() {
                 className="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
               />
             </div>
+            <p className="text-gray-500 text-xs mt-1">Auto-generated from the name. You can change it if needed.</p>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Locale</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Language
+                <HelpTooltip text="The language this quiz is in. This determines which email templates are used for follow-up emails." />
+              </label>
               <select
                 value={locale}
                 onChange={(e) => setLocale(e.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"
               >
-                <option value="en">English (en)</option>
-                <option value="ru">Russian (ru)</option>
-                <option value="es">Spanish (es)</option>
-                <option value="de">German (de)</option>
-                <option value="fr">French (fr)</option>
-                <option value="pt">Portuguese (pt)</option>
+                <option value="en">English</option>
+                <option value="ru">Russian</option>
+                <option value="es">Spanish</option>
+                <option value="de">German</option>
+                <option value="fr">French</option>
+                <option value="pt">Portuguese</option>
               </select>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2">Results Path</label>
+              <label className="block text-sm font-medium text-gray-300 mb-2">
+                Results Page URL
+                <HelpTooltip text="After completing the quiz, users are redirected here to see their results. Usually '/results' for English or '/moscow/results' for Russian." />
+              </label>
               <input
                 type="text"
                 value={resultsPath}
@@ -148,11 +167,14 @@ export default function NewFormPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-300 mb-2">Description (optional)</label>
+            <label className="block text-sm font-medium text-gray-300 mb-2">
+              Internal Notes
+              <HelpTooltip text="Optional notes for your reference. Quiz takers won't see this." />
+            </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Internal notes about this quiz form..."
+              placeholder="e.g. 'Quiz targeting crypto traders, running on Twitter ads'"
               rows={2}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
             />
@@ -160,23 +182,21 @@ export default function NewFormPage() {
 
           <div>
             <label className="block text-sm font-medium text-gray-300 mb-2">
-              Clone Questions From (optional)
+              Copy questions from an existing quiz
+              <HelpTooltip text="Start with a copy of another quiz's questions instead of starting from scratch. You can change anything afterwards." />
             </label>
             <select
               value={cloneFromId}
               onChange={(e) => setCloneFromId(e.target.value)}
               className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-blue-500"
             >
-              <option value="">Start with empty form</option>
+              <option value="">Start with a blank quiz (no questions)</option>
               {existingForms.map((f) => (
                 <option key={f.id} value={f.id}>
                   {f.name} ({f.locale})
                 </option>
               ))}
             </select>
-            <p className="text-gray-500 text-xs mt-1">
-              Copy all questions from an existing form as a starting point
-            </p>
           </div>
 
           <button
@@ -184,7 +204,7 @@ export default function NewFormPage() {
             disabled={saving || !name || !slug}
             className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {saving ? 'Creating...' : 'Create Form'}
+            {saving ? 'Creating...' : 'Create Quiz'}
           </button>
         </form>
       </div>

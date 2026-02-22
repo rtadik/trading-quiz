@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import ToastContainer, { showToast } from '@/components/admin/Toast';
+import ConfirmModal from '@/components/admin/ConfirmModal';
 
 interface QuizForm {
   id: string;
@@ -16,11 +18,21 @@ interface QuizForm {
   createdAt: string;
 }
 
+const LOCALE_LABELS: Record<string, string> = {
+  en: 'English',
+  ru: 'Russian',
+  es: 'Spanish',
+  de: 'German',
+  fr: 'French',
+  pt: 'Portuguese',
+};
+
 export default function AdminFormsPage() {
   const router = useRouter();
   const [forms, setForms] = useState<QuizForm[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<QuizForm | null>(null);
 
   const fetchForms = () => {
     fetch('/api/admin/forms')
@@ -49,21 +61,26 @@ export default function AdminFormsPage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ status: newStatus }),
     });
+    showToast(
+      newStatus === 'published' ? 'Quiz is now live!' : 'Quiz is now hidden.',
+      'success'
+    );
     fetchForms();
   };
 
-  const deleteForm = async (id: string) => {
-    if (!confirm('Are you sure you want to delete this form? This cannot be undone.')) return;
-    setDeleting(id);
-    await fetch(`/api/admin/forms/${id}`, { method: 'DELETE' });
+  const deleteForm = async (form: QuizForm) => {
+    setDeleting(form.id);
+    await fetch(`/api/admin/forms/${form.id}`, { method: 'DELETE' });
+    showToast('Quiz form deleted.', 'success');
     fetchForms();
     setDeleting(null);
+    setConfirmDelete(null);
   };
 
   const copyUrl = (slug: string) => {
     const url = `${window.location.origin}/q/${slug}`;
     navigator.clipboard.writeText(url);
-    alert('URL copied to clipboard!');
+    showToast('Link copied to clipboard!', 'success');
   };
 
   if (loading) {
@@ -76,8 +93,20 @@ export default function AdminFormsPage() {
 
   return (
     <main className="min-h-screen p-6">
+      <ToastContainer />
+      {confirmDelete && (
+        <ConfirmModal
+          title="Delete this quiz?"
+          message={`"${confirmDelete.name}" and all its questions will be permanently deleted. This cannot be undone.`}
+          confirmLabel="Delete"
+          variant="danger"
+          onConfirm={() => deleteForm(confirmDelete)}
+          onCancel={() => setConfirmDelete(null)}
+        />
+      )}
+
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-6">
           <div>
             <Link href="/admin" className="text-gray-400 hover:text-white text-sm mb-2 inline-block">
               &larr; Back to Dashboard
@@ -88,8 +117,15 @@ export default function AdminFormsPage() {
             href="/admin/forms/new"
             className="bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-2 rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all font-semibold"
           >
-            + Create New Form
+            + Create New Quiz
           </Link>
+        </div>
+
+        {/* Help banner */}
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl px-5 py-4 mb-6">
+          <p className="text-blue-300 text-sm">
+            This is where you manage your quiz forms. Each form is a different version of the quiz with its own questions, language, and scoring. Click <strong>Edit</strong> to change a form, or <strong>Create New Quiz</strong> to start fresh.
+          </p>
         </div>
 
         {forms.length === 0 ? (
@@ -111,16 +147,16 @@ export default function AdminFormsPage() {
                             : 'bg-yellow-500/20 text-yellow-400'
                         }`}
                       >
-                        {form.status}
+                        {form.status === 'published' ? 'Live' : 'Hidden'}
                       </span>
-                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400 uppercase">
-                        {form.locale}
+                      <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-blue-500/20 text-blue-400">
+                        {LOCALE_LABELS[form.locale] || form.locale}
                       </span>
                     </div>
                     <div className="flex items-center gap-4 text-sm text-gray-400">
-                      <span>Slug: <code className="text-gray-300">/q/{form.slug}</code></span>
+                      <span>Quiz link: <code className="text-gray-300">/q/{form.slug}</code></span>
                       <span>{form.questionCount} questions</span>
-                      <span>Results: <code className="text-gray-300">{form.resultsPath}</code></span>
+                      <span>Results page: <code className="text-gray-300">{form.resultsPath}</code></span>
                     </div>
                     {form.description && (
                       <p className="text-gray-500 text-sm mt-1">{form.description}</p>
@@ -131,13 +167,13 @@ export default function AdminFormsPage() {
                       onClick={() => toggleStatus(form)}
                       className="px-3 py-1.5 rounded-lg text-sm bg-white/10 text-white hover:bg-white/20 transition-colors"
                     >
-                      {form.status === 'published' ? 'Unpublish' : 'Publish'}
+                      {form.status === 'published' ? 'Hide' : 'Make Live'}
                     </button>
                     <button
                       onClick={() => copyUrl(form.slug)}
                       className="px-3 py-1.5 rounded-lg text-sm bg-white/10 text-white hover:bg-white/20 transition-colors"
                     >
-                      Copy URL
+                      Copy Link
                     </button>
                     <Link
                       href={`/admin/forms/${form.id}`}
@@ -146,7 +182,7 @@ export default function AdminFormsPage() {
                       Edit
                     </Link>
                     <button
-                      onClick={() => deleteForm(form.id)}
+                      onClick={() => setConfirmDelete(form)}
                       disabled={deleting === form.id}
                       className="px-3 py-1.5 rounded-lg text-sm bg-red-600/20 text-red-400 hover:bg-red-600/40 transition-colors disabled:opacity-50"
                     >
