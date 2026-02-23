@@ -76,6 +76,20 @@ model EmailCampaign {
   @@index([createdAt])
 }
 
+model NurtureTemplate {
+  id              String   @id @default(cuid())
+  personalityType String   // emotional_trader | time_starved_trader | inconsistent_executor | overwhelmed_analyst
+  emailNumber     Int      // 1–8
+  locale          String   @default("en")  // en | ru
+  subject         String
+  body            String   @db.Text        // Full HTML with {{firstName}} placeholder
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([personalityType, emailNumber, locale])
+  @@index([personalityType, locale])
+}
+
 model QuizForm {
   id          String             @id @default(cuid())
   name        String             // Display name (e.g., "English Default", "Russian Default")

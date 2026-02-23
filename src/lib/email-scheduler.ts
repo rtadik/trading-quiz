@@ -1,6 +1,7 @@
 import { prisma } from './db';
 import { sendTransactionalEmail } from './brevo';
 import { getEmailTemplate } from './email-templates';
+import { getEmailTemplateRu } from './email-templates-ru';
 import { PersonalityType } from './scoring';
 
 export async function processEmailQueue(): Promise<{ processed: number; errors: number }> {
@@ -14,33 +15,67 @@ export async function processEmailQueue(): Promise<{ processed: number; errors: 
       status: 'pending',
       scheduledAt: { lte: now },
     },
-    include: { contact: true },
+    include: {
+      contact: {
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          personalityType: true,
+          locale: true,
+        },
+      },
+    },
     take: 50, // Process in batches
     orderBy: { scheduledAt: 'asc' },
   });
 
   for (const scheduled of pendingEmails) {
     try {
-      const template = getEmailTemplate(
-        scheduled.contact.personalityType as PersonalityType,
-        scheduled.emailNumber
-      );
+      const firstName = scheduled.contact.firstName;
+      const personalityType = scheduled.contact.personalityType;
+      const locale = scheduled.contact.locale ?? 'en';
 
-      if (!template) {
-        console.error(`No template found for type=${scheduled.contact.personalityType} email=${scheduled.emailNumber}`);
-        await prisma.emailSchedule.update({
-          where: { id: scheduled.id },
-          data: { status: 'failed' },
-        });
-        errors++;
-        continue;
+      // Try DB template first
+      const dbTemplate = await prisma.nurtureTemplate.findUnique({
+        where: {
+          personalityType_emailNumber_locale: {
+            personalityType,
+            emailNumber: scheduled.emailNumber,
+            locale,
+          },
+        },
+      });
+
+      let subject: string;
+      let html: string;
+
+      if (dbTemplate) {
+        subject = dbTemplate.subject.replace(/\{\{firstName\}\}/g, firstName);
+        html = dbTemplate.body.replace(/\{\{firstName\}\}/g, firstName);
+      } else {
+        // Fallback to hardcoded templates
+        const templateFn =
+          locale === 'ru'
+            ? getEmailTemplateRu(personalityType as PersonalityType, scheduled.emailNumber)
+            : getEmailTemplate(personalityType as PersonalityType, scheduled.emailNumber);
+
+        if (!templateFn) {
+          console.error(`No template found for type=${personalityType} email=${scheduled.emailNumber} locale=${locale}`);
+          await prisma.emailSchedule.update({
+            where: { id: scheduled.id },
+            data: { status: 'failed' },
+          });
+          errors++;
+          continue;
+        }
+
+        ({ subject, html } = templateFn(firstName));
       }
-
-      const { subject, html } = template(scheduled.contact.firstName);
 
       const result = await sendTransactionalEmail({
         to: scheduled.contact.email,
-        toName: scheduled.contact.firstName,
+        toName: firstName,
         subject,
         htmlContent: html,
       });

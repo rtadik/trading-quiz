@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { motion } from 'framer-motion';
 
 interface EmailTemplate {
@@ -174,7 +175,15 @@ export default function EmailAdminPage() {
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-7xl mx-auto">
-        <h1 className="text-3xl font-bold text-white mb-8">Email Campaign Manager</h1>
+        <div className="flex items-center justify-between mb-8">
+          <h1 className="text-3xl font-bold text-white">Email Campaign Manager</h1>
+          <Link
+            href="/admin/emails/nurture"
+            className="px-4 py-2 bg-gray-800 hover:bg-gray-700 border border-gray-700 text-white text-sm font-medium rounded-lg transition-colors"
+          >
+            Nurture Sequences →
+          </Link>
+        </div>
 
         {/* Message Alert */}
         {message && (

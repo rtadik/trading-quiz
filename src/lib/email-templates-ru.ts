@@ -713,3 +713,7 @@ export function getEmailTemplateRu(
   if (!templates || emailNumber < 1 || emailNumber > templates.length) return null;
   return templates[emailNumber - 1];
 }
+
+export function getAllEmailTemplatesRu(): Record<PersonalityType, EmailTemplateFn[]> {
+  return EMAIL_TEMPLATES_RU;
+}
