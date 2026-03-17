@@ -30,6 +30,7 @@ export default function EmailAdminPage() {
   // Recipient selection
   const [segmentType, setSegmentType] = useState<string>('all');
   const [personalityTypes, setPersonalityTypes] = useState<string[]>([]);
+  const [specificEmail, setSpecificEmail] = useState('');
   const [recipientCount, setRecipientCount] = useState(0);
 
   // UI states
@@ -53,8 +54,12 @@ export default function EmailAdminPage() {
 
   // Update recipient count when segment changes
   useEffect(() => {
-    updateRecipientCount();
-  }, [segmentType, personalityTypes]);
+    if (segmentType === 'specific_email') {
+      setRecipientCount(specificEmail && specificEmail.includes('@') ? 1 : 0);
+    } else {
+      updateRecipientCount();
+    }
+  }, [segmentType, personalityTypes, specificEmail]);
 
   const fetchTemplates = async () => {
     try {
@@ -147,7 +152,8 @@ export default function EmailAdminPage() {
           body,
           segmentType,
           segmentFilter: {
-            personalityTypes: segmentType === 'personality_type' ? personalityTypes : undefined
+            personalityTypes: segmentType === 'personality_type' ? personalityTypes : undefined,
+            specificEmail: segmentType === 'specific_email' ? specificEmail : undefined
           }
         })
       });
@@ -275,12 +281,27 @@ export default function EmailAdminPage() {
                     onChange={(e) => {
                       setSegmentType(e.target.value);
                       setPersonalityTypes([]);
+                      setSpecificEmail('');
                     }}
                   >
                     <option value="all" className="bg-gray-800">All Users</option>
                     <option value="personality_type" className="bg-gray-800">By Personality Type</option>
+                    <option value="specific_email" className="bg-gray-800">Specific Email Address</option>
                   </select>
                 </div>
+
+                {segmentType === 'specific_email' && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">Email Address</label>
+                    <input
+                      type="email"
+                      className="w-full p-3 bg-white/5 border border-white/10 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      placeholder="recipient@example.com"
+                      value={specificEmail}
+                      onChange={(e) => setSpecificEmail(e.target.value)}
+                    />
+                  </div>
+                )}
 
                 {segmentType === 'personality_type' && (
                   <div>

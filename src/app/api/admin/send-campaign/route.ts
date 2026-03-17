@@ -26,25 +26,36 @@ export async function POST(request: Request) {
       );
     }
 
-    // Build query to get recipients
-    let whereClause: any = {};
+    let recipients: { id: string; email: string; firstName: string; personalityType: string }[] = [];
 
-    if (segmentType === 'personality_type' && segmentFilter?.personalityTypes) {
-      whereClause.personalityType = {
-        in: segmentFilter.personalityTypes
-      };
-    }
+    if (segmentType === 'specific_email' && segmentFilter?.specificEmail) {
+      // Send to a single arbitrary email address
+      recipients = [{
+        id: 'manual',
+        email: segmentFilter.specificEmail,
+        firstName: segmentFilter.specificEmail.split('@')[0],
+        personalityType: ''
+      }];
+    } else {
+      // Build query to get recipients from DB
+      let whereClause: any = {};
 
-    // Get recipients
-    const recipients = await prisma.contact.findMany({
-      where: whereClause,
-      select: {
-        id: true,
-        email: true,
-        firstName: true,
-        personalityType: true
+      if (segmentType === 'personality_type' && segmentFilter?.personalityTypes) {
+        whereClause.personalityType = {
+          in: segmentFilter.personalityTypes
+        };
       }
-    });
+
+      recipients = await prisma.contact.findMany({
+        where: whereClause,
+        select: {
+          id: true,
+          email: true,
+          firstName: true,
+          personalityType: true
+        }
+      });
+    }
 
     if (recipients.length === 0) {
       return NextResponse.json(
