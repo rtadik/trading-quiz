@@ -35,6 +35,12 @@ export default function AdminDashboard() {
   const router = useRouter();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showGuide, setShowGuide] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('admin_hide_guide') !== 'true';
+    }
+    return true;
+  });
 
   useEffect(() => {
     fetch('/api/admin/stats')
@@ -95,6 +101,46 @@ export default function AdminDashboard() {
             </Link>
           </div>
         </div>
+
+        {/* Getting Started Guide */}
+        {showGuide && (
+          <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl p-6 mb-6">
+            <div className="flex items-start justify-between mb-3">
+              <h2 className="text-lg font-semibold text-blue-300">Getting Started</h2>
+              <button
+                onClick={() => {
+                  setShowGuide(false);
+                  localStorage.setItem('admin_hide_guide', 'true');
+                }}
+                className="text-gray-500 hover:text-gray-300 text-sm"
+              >
+                Dismiss
+              </button>
+            </div>
+            <p className="text-gray-300 text-sm mb-4">
+              This admin panel lets you manage trading personality quizzes. People take the quiz, get a personality type result, and receive follow-up emails automatically.
+            </p>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+              <div className="bg-white/5 rounded-lg p-3">
+                <p className="text-white text-sm font-medium mb-1">Quiz Forms</p>
+                <p className="text-gray-400 text-xs">Create and edit your quizzes, questions, and scoring</p>
+              </div>
+              <div className="bg-white/5 rounded-lg p-3">
+                <p className="text-white text-sm font-medium mb-1">Email Campaigns</p>
+                <p className="text-gray-400 text-xs">Send targeted emails to people who took the quiz</p>
+              </div>
+              <div className="bg-white/5 rounded-lg p-3">
+                <p className="text-white text-sm font-medium mb-1">Submissions</p>
+                <p className="text-gray-400 text-xs">See who took the quiz and their personality results</p>
+              </div>
+            </div>
+            <div className="text-xs text-gray-500">
+              <p><strong className="text-gray-400">Edit quiz questions:</strong> Quiz Forms &rarr; Click Edit on a form</p>
+              <p><strong className="text-gray-400">See who took the quiz:</strong> Click Submissions above</p>
+              <p><strong className="text-gray-400">Send an email blast:</strong> Click Email Campaigns above</p>
+            </div>
+          </div>
+        )}
 
         {/* KPI Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">

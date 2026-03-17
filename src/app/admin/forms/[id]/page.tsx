@@ -3,12 +3,15 @@
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
+import HelpTooltip from '@/components/admin/HelpTooltip';
+import ToastContainer, { showToast } from '@/components/admin/Toast';
+import ConfirmModal from '@/components/admin/ConfirmModal';
 
 const PERSONALITY_TYPES = [
-  'emotional_trader',
-  'time_starved_trader',
-  'inconsistent_executor',
-  'overwhelmed_analyst',
+  { key: 'emotional_trader', label: 'Emotional Trader' },
+  { key: 'time_starved_trader', label: 'Time-Starved Trader' },
+  { key: 'inconsistent_executor', label: 'Inconsistent Executor' },
+  { key: 'overwhelmed_analyst', label: 'Overwhelmed Analyst' },
 ];
 
 interface QuestionData {
@@ -44,6 +47,16 @@ interface FormData {
   }[];
 }
 
+function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^a-z0-9\s_]/g, '')
+    .replace(/\s+/g, '_')
+    .replace(/_+/g, '_')
+    .replace(/^_|_$/g, '')
+    .substring(0, 40);
+}
+
 function parseQuestion(q: FormData['questions'][0]): QuestionData {
   return {
     questionKey: q.questionKey,
@@ -70,6 +83,78 @@ function newQuestion(position: number): QuestionData {
   };
 }
 
+// Test scoring simulator
+function simulateScoring(
+  questions: QuestionData[],
+  testAnswers: Record<string, string>
+): { type: string; scores: Record<string, number> } | null {
+  const scores: Record<string, number> = {
+    emotional_trader: 0,
+    time_starved_trader: 0,
+    inconsistent_executor: 0,
+    overwhelmed_analyst: 0,
+  };
+
+  let hasScoredQuestion = false;
+  let highestWeightQuestion: { key: string; weight: number } | null = null;
+
+  for (const q of questions) {
+    if (q.scoringWeight === 0 || q.type !== 'multiple_choice') continue;
+    hasScoredQuestion = true;
+
+    const answer = testAnswers[q.questionKey];
+    if (!answer) continue;
+
+    const answerScores = q.scoringMap[answer];
+    if (!answerScores) continue;
+
+    for (const [pt, points] of Object.entries(answerScores)) {
+      if (pt in scores) scores[pt] += points;
+    }
+
+    if (!highestWeightQuestion || q.scoringWeight > highestWeightQuestion.weight) {
+      highestWeightQuestion = { key: q.questionKey, weight: q.scoringWeight };
+    }
+  }
+
+  if (!hasScoredQuestion) return null;
+
+  let maxScore = 0;
+  let maxType = 'emotional_trader';
+  let hasTie = false;
+
+  for (const [type, score] of Object.entries(scores)) {
+    if (score > maxScore) {
+      maxScore = score;
+      maxType = type;
+      hasTie = false;
+    } else if (score === maxScore && score > 0) {
+      hasTie = true;
+    }
+  }
+
+  if (hasTie && highestWeightQuestion) {
+    const tieAnswer = testAnswers[highestWeightQuestion.key];
+    if (tieAnswer) {
+      const tieQ = questions.find((q) => q.questionKey === highestWeightQuestion!.key);
+      if (tieQ) {
+        const tieScores = tieQ.scoringMap[tieAnswer];
+        if (tieScores) {
+          let tieMax = 0;
+          for (const [type, points] of Object.entries(tieScores)) {
+            if (points > tieMax && type in scores) {
+              tieMax = points;
+              maxType = type;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  return { type: maxType, scores };
+}
+
 export default function FormEditorPage() {
   const router = useRouter();
   const params = useParams();
@@ -78,7 +163,6 @@ export default function FormEditorPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
 
   // Form metadata
   const [name, setName] = useState('');
@@ -91,6 +175,21 @@ export default function FormEditorPage() {
   // Questions
   const [questions, setQuestions] = useState<QuestionData[]>([]);
   const [expandedQ, setExpandedQ] = useState<number | null>(null);
+
+  // Advanced toggles
+  const [showAdvanced, setShowAdvanced] = useState<Record<number, boolean>>({});
+  const [showInternalIds, setShowInternalIds] = useState(false);
+
+  // Confirm modal state
+  const [confirmAction, setConfirmAction] = useState<{
+    title: string;
+    message: string;
+    onConfirm: () => void;
+  } | null>(null);
+
+  // Test scoring state
+  const [showTestScoring, setShowTestScoring] = useState(false);
+  const [testAnswers, setTestAnswers] = useState<Record<string, string>>({});
 
   const fetchForm = useCallback(() => {
     fetch(`/api/admin/forms/${formId}`)
@@ -127,10 +226,8 @@ export default function FormEditorPage() {
   const handleSave = async () => {
     setSaving(true);
     setError('');
-    setSuccess('');
 
     try {
-      // Save form metadata
       const metaRes = await fetch(`/api/admin/forms/${formId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -142,7 +239,6 @@ export default function FormEditorPage() {
         throw new Error(data.error || 'Failed to save form');
       }
 
-      // Save questions
       const qRes = await fetch(`/api/admin/forms/${formId}/questions`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -165,8 +261,7 @@ export default function FormEditorPage() {
         throw new Error('Failed to save questions');
       }
 
-      setSuccess('Form saved successfully!');
-      setTimeout(() => setSuccess(''), 3000);
+      showToast('Quiz saved successfully!', 'success');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Something went wrong');
     } finally {
@@ -184,6 +279,7 @@ export default function FormEditorPage() {
     });
     if (res.ok) {
       const form = await res.json();
+      showToast('Quiz duplicated!', 'success');
       router.push(`/admin/forms/${form.id}`);
     } else {
       const data = await res.json();
@@ -207,9 +303,32 @@ export default function FormEditorPage() {
   };
 
   const removeQuestion = (index: number) => {
-    if (!confirm('Remove this question?')) return;
-    setQuestions((prev) => prev.filter((_, i) => i !== index));
-    setExpandedQ(null);
+    setConfirmAction({
+      title: 'Delete this question?',
+      message: 'This question and its scoring settings will be removed. You can undo by not saving the form.',
+      onConfirm: () => {
+        setQuestions((prev) => prev.filter((_, i) => i !== index));
+        setExpandedQ(null);
+        setConfirmAction(null);
+        showToast('Question removed.', 'info');
+      },
+    });
+  };
+
+  const duplicateQuestion = (index: number) => {
+    const original = questions[index];
+    const copy: QuestionData = {
+      ...original,
+      questionKey: `${original.questionKey}_copy`,
+      question: original.question ? `${original.question} (copy)` : '',
+    };
+    setQuestions((prev) => {
+      const arr = [...prev];
+      arr.splice(index + 1, 0, copy);
+      return arr;
+    });
+    setExpandedQ(index + 1);
+    showToast('Question duplicated!', 'success');
   };
 
   const addQuestion = () => {
@@ -217,7 +336,7 @@ export default function FormEditorPage() {
     setExpandedQ(questions.length);
   };
 
-  // Option helpers for a specific question
+  // Option helpers
   const addOption = (qIndex: number) => {
     const q = questions[qIndex];
     const num = q.options.length + 1;
@@ -226,7 +345,15 @@ export default function FormEditorPage() {
 
   const updateOption = (qIndex: number, oIndex: number, field: 'value' | 'label', val: string) => {
     const q = questions[qIndex];
-    const opts = q.options.map((o, i) => (i === oIndex ? { ...o, [field]: val } : o));
+    const opts = q.options.map((o, i) => {
+      if (i !== oIndex) return o;
+      const updated = { ...o, [field]: val };
+      // Auto-generate internal ID from label if label is being changed
+      if (field === 'label' && !showInternalIds) {
+        updated.value = slugify(val) || `option_${oIndex + 1}`;
+      }
+      return updated;
+    });
     updateQuestion(qIndex, { options: opts });
   };
 
@@ -235,19 +362,71 @@ export default function FormEditorPage() {
     updateQuestion(qIndex, { options: q.options.filter((_, i) => i !== oIndex) });
   };
 
-  // Scoring map helpers
-  const updateScoringMap = (qIndex: number, answerValue: string, personalityType: string, points: number) => {
+  // Scoring helpers
+  const setScoringEnabled = (qIndex: number, enabled: boolean) => {
+    if (enabled) {
+      updateQuestion(qIndex, { scoringWeight: 2 }); // Default to "Secondary"
+    } else {
+      updateQuestion(qIndex, { scoringWeight: 0, scoringMap: {} });
+    }
+  };
+
+  const setScoringImportance = (qIndex: number, importance: string) => {
+    const weights: Record<string, number> = { primary: 3, secondary: 2, minor: 1 };
+    updateQuestion(qIndex, { scoringWeight: weights[importance] || 2 });
+  };
+
+  const getImportanceFromWeight = (weight: number): string => {
+    if (weight >= 3) return 'primary';
+    if (weight === 2) return 'secondary';
+    return 'minor';
+  };
+
+  const updateAnswerScoring = (qIndex: number, answerValue: string, personalityType: string, points: number) => {
     const q = questions[qIndex];
     const newMap = { ...q.scoringMap };
+
+    // Clear previous personality type for this answer (only allow one type per answer for simplicity)
     if (!newMap[answerValue]) newMap[answerValue] = {};
-    if (points === 0) {
-      delete newMap[answerValue][personalityType];
-      if (Object.keys(newMap[answerValue]).length === 0) delete newMap[answerValue];
+
+    if (personalityType === '' || points === 0) {
+      // Clear scoring for this answer
+      delete newMap[answerValue];
     } else {
-      newMap[answerValue][personalityType] = points;
+      // Set the personality type for this answer
+      newMap[answerValue] = { [personalityType]: points };
     }
     updateQuestion(qIndex, { scoringMap: newMap });
   };
+
+  const getAnswerPersonalityType = (q: QuestionData, answerValue: string): string => {
+    const mapping = q.scoringMap[answerValue];
+    if (!mapping) return '';
+    const entries = Object.entries(mapping);
+    if (entries.length === 0) return '';
+    return entries[0][0];
+  };
+
+  const getAnswerPoints = (q: QuestionData, answerValue: string): number => {
+    const mapping = q.scoringMap[answerValue];
+    if (!mapping) return 3;
+    const entries = Object.entries(mapping);
+    if (entries.length === 0) return 3;
+    return entries[0][1];
+  };
+
+  // Auto-generate question key from question text
+  const autoGenerateKey = (qIndex: number, questionText: string) => {
+    if (!showAdvanced[qIndex]) {
+      const key = slugify(questionText) || `question_${qIndex}`;
+      updateQuestion(qIndex, { question: questionText, questionKey: key });
+    } else {
+      updateQuestion(qIndex, { question: questionText });
+    }
+  };
+
+  // Test scoring result
+  const testResult = showTestScoring ? simulateScoring(questions, testAnswers) : null;
 
   if (loading) {
     return (
@@ -259,14 +438,26 @@ export default function FormEditorPage() {
 
   return (
     <main className="min-h-screen p-6">
+      <ToastContainer />
+      {confirmAction && (
+        <ConfirmModal
+          title={confirmAction.title}
+          message={confirmAction.message}
+          confirmLabel="Delete"
+          variant="danger"
+          onConfirm={confirmAction.onConfirm}
+          onCancel={() => setConfirmAction(null)}
+        />
+      )}
+
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
             <Link href="/admin/forms" className="text-gray-400 hover:text-white text-sm mb-2 inline-block">
-              &larr; Back to Forms
+              &larr; Back to Quiz Forms
             </Link>
-            <h1 className="text-3xl font-bold text-white">Edit Form</h1>
+            <h1 className="text-3xl font-bold text-white">Edit Quiz</h1>
           </div>
           <div className="flex items-center gap-2">
             <a
@@ -275,8 +466,18 @@ export default function FormEditorPage() {
               rel="noopener noreferrer"
               className="px-4 py-2 rounded-lg text-sm bg-white/10 text-white hover:bg-white/20 transition-colors"
             >
-              Preview
+              Preview Quiz
             </a>
+            <button
+              onClick={() => setShowTestScoring(!showTestScoring)}
+              className={`px-4 py-2 rounded-lg text-sm transition-colors ${
+                showTestScoring
+                  ? 'bg-purple-600/30 text-purple-300 hover:bg-purple-600/40'
+                  : 'bg-white/10 text-white hover:bg-white/20'
+              }`}
+            >
+              Test Scoring
+            </button>
             <button
               onClick={handleDuplicate}
               className="px-4 py-2 rounded-lg text-sm bg-white/10 text-white hover:bg-white/20 transition-colors"
@@ -288,9 +489,16 @@ export default function FormEditorPage() {
               disabled={saving}
               className="px-6 py-2 rounded-lg text-sm bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all font-semibold disabled:opacity-50"
             >
-              {saving ? 'Saving...' : 'Save Form'}
+              {saving ? 'Saving...' : 'Save Quiz'}
             </button>
           </div>
+        </div>
+
+        {/* Help banner */}
+        <div className="bg-blue-500/10 border border-blue-500/20 rounded-xl px-5 py-4 mb-6">
+          <p className="text-blue-300 text-sm">
+            Set up your quiz details below, then add and configure questions. When you&apos;re done, click <strong>Save Quiz</strong> and set visibility to <strong>Live</strong> to make it accessible.
+          </p>
         </div>
 
         {error && (
@@ -298,18 +506,72 @@ export default function FormEditorPage() {
             {error}
           </div>
         )}
-        {success && (
-          <div className="mb-4 bg-green-500/10 border border-green-500/30 text-green-400 px-4 py-3 rounded-xl text-sm">
-            {success}
+
+        {/* Test Scoring Panel */}
+        {showTestScoring && (
+          <div className="bg-purple-500/10 border border-purple-500/20 rounded-xl p-6 mb-6">
+            <h2 className="text-lg font-semibold text-white mb-2">Test Your Scoring</h2>
+            <p className="text-gray-400 text-sm mb-4">
+              Select answers below to see which personality type they would produce. This uses the scoring you&apos;ve configured on each question.
+            </p>
+            {questions.filter((q) => q.scoringWeight > 0 && q.type === 'multiple_choice').length === 0 ? (
+              <p className="text-yellow-400 text-sm">No questions are set up for scoring yet. Enable &quot;Does this question affect the result?&quot; on at least one multiple choice question.</p>
+            ) : (
+              <>
+                <div className="space-y-4 mb-4">
+                  {questions.map((q, i) => {
+                    if (q.scoringWeight === 0 || q.type !== 'multiple_choice') return null;
+                    return (
+                      <div key={i}>
+                        <p className="text-sm text-gray-300 mb-1">{q.question || `Question ${i + 1}`}</p>
+                        <select
+                          value={testAnswers[q.questionKey] || ''}
+                          onChange={(e) => setTestAnswers((prev) => ({ ...prev, [q.questionKey]: e.target.value }))}
+                          className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-purple-500"
+                        >
+                          <option value="">-- Select an answer --</option>
+                          {q.options.map((opt) => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
+                      </div>
+                    );
+                  })}
+                </div>
+                {testResult && (
+                  <div className="bg-white/5 border border-white/10 rounded-lg p-4">
+                    <p className="text-white font-medium mb-2">
+                      Result: <span className="text-purple-300">{PERSONALITY_TYPES.find((pt) => pt.key === testResult.type)?.label || testResult.type}</span>
+                    </p>
+                    <div className="grid grid-cols-2 gap-2">
+                      {PERSONALITY_TYPES.map((pt) => (
+                        <div key={pt.key} className="flex justify-between text-sm">
+                          <span className="text-gray-400">{pt.label}</span>
+                          <span className={testResult.type === pt.key ? 'text-purple-300 font-medium' : 'text-gray-500'}>
+                            {testResult.scores[pt.key] || 0} pts
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {!testResult && Object.keys(testAnswers).length > 0 && (
+                  <p className="text-gray-500 text-sm">Select answers above to see the result.</p>
+                )}
+              </>
+            )}
           </div>
         )}
 
-        {/* Form Metadata */}
+        {/* Quiz Settings */}
         <div className="bg-white/5 border border-white/10 rounded-xl p-6 mb-6">
-          <h2 className="text-lg font-semibold text-white mb-4">Form Settings</h2>
+          <h2 className="text-lg font-semibold text-white mb-4">Quiz Settings</h2>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Name</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Quiz Name
+                <HelpTooltip text="The name of this quiz. Only visible to admins, not quiz takers." />
+              </label>
               <input
                 type="text"
                 value={name}
@@ -318,7 +580,10 @@ export default function FormEditorPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Slug</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                URL Path
+                <HelpTooltip text="The web address for this quiz. People will access it at yoursite.com/q/this-value" />
+              </label>
               <div className="flex items-center gap-1">
                 <span className="text-gray-500 text-sm">/q/</span>
                 <input
@@ -330,22 +595,28 @@ export default function FormEditorPage() {
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Locale</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Language
+                <HelpTooltip text="Determines which language email templates are used for follow-up emails." />
+              </label>
               <select
                 value={locale}
                 onChange={(e) => setLocale(e.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
               >
-                <option value="en">English (en)</option>
-                <option value="ru">Russian (ru)</option>
-                <option value="es">Spanish (es)</option>
-                <option value="de">German (de)</option>
-                <option value="fr">French (fr)</option>
-                <option value="pt">Portuguese (pt)</option>
+                <option value="en">English</option>
+                <option value="ru">Russian</option>
+                <option value="es">Spanish</option>
+                <option value="de">German</option>
+                <option value="fr">French</option>
+                <option value="pt">Portuguese</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Results Path</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Results Page URL
+                <HelpTooltip text="Where users go after finishing the quiz (e.g., /results for English, /moscow/results for Russian)." />
+              </label>
               <input
                 type="text"
                 value={resultsPath}
@@ -354,23 +625,29 @@ export default function FormEditorPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Status</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Visibility
+                <HelpTooltip text="Live = anyone can access the quiz. Hidden = only visible to admins." />
+              </label>
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-blue-500"
               >
-                <option value="draft">Draft</option>
-                <option value="published">Published</option>
+                <option value="draft">Hidden (only you can see)</option>
+                <option value="published">Live (anyone can access)</option>
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-1">Description</label>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
+                Internal Notes
+                <HelpTooltip text="Optional notes for your reference. Quiz takers won't see this." />
+              </label>
               <input
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="Internal notes..."
+                placeholder="e.g. 'For Twitter ad campaign'"
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
               />
             </div>
@@ -381,31 +658,48 @@ export default function FormEditorPage() {
         <div className="bg-white/5 border border-white/10 rounded-xl p-6">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-semibold text-white">Questions ({questions.length})</h2>
-            <button
-              onClick={addQuestion}
-              className="px-4 py-1.5 rounded-lg text-sm bg-green-600/20 text-green-400 hover:bg-green-600/40 transition-colors"
-            >
-              + Add Question
-            </button>
+            <div className="flex items-center gap-3">
+              <label className="flex items-center gap-2 text-xs text-gray-400 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={showInternalIds}
+                  onChange={(e) => setShowInternalIds(e.target.checked)}
+                  className="rounded"
+                />
+                Show internal IDs
+              </label>
+              <button
+                onClick={addQuestion}
+                className="px-4 py-1.5 rounded-lg text-sm bg-green-600/20 text-green-400 hover:bg-green-600/40 transition-colors"
+              >
+                + Add Question
+              </button>
+            </div>
           </div>
 
           <div className="space-y-3">
             {questions.map((q, i) => {
               const isExpanded = expandedQ === i;
+              const isScored = q.scoringWeight > 0;
               return (
                 <div key={i} className="border border-white/10 rounded-lg overflow-hidden">
-                  {/* Question header (always visible) */}
+                  {/* Question header (collapsed) */}
                   <div
                     className="flex items-center gap-3 px-4 py-3 bg-white/5 cursor-pointer hover:bg-white/10 transition-colors"
                     onClick={() => setExpandedQ(isExpanded ? null : i)}
                   >
                     <span className="text-gray-500 text-sm font-mono w-6">{i + 1}</span>
-                    <span className="text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">{q.type}</span>
+                    <span className="text-xs px-2 py-0.5 rounded bg-blue-500/20 text-blue-400">
+                      {q.type === 'multiple_choice' ? 'Choice' : q.type === 'email' ? 'Email' : 'Text'}
+                    </span>
                     <span className="text-white flex-1 truncate">{q.question || '(empty question)'}</span>
-                    <span className="text-gray-500 text-xs">{q.questionKey}</span>
-                    {q.scoringWeight > 0 && (
+                    {isScored ? (
                       <span className="text-xs px-2 py-0.5 rounded bg-purple-500/20 text-purple-400">
-                        scored (w:{q.scoringWeight})
+                        Affects result
+                      </span>
+                    ) : (
+                      <span className="text-xs px-2 py-0.5 rounded bg-gray-500/20 text-gray-500">
+                        Info only
                       </span>
                     )}
                     <span className="text-gray-500">{isExpanded ? '\u25B2' : '\u25BC'}</span>
@@ -415,58 +709,77 @@ export default function FormEditorPage() {
                   {isExpanded && (
                     <div className="p-4 space-y-4 bg-white/[0.02]">
                       <div className="grid grid-cols-3 gap-4">
+                        {showAdvanced[i] && (
+                          <div>
+                            <label className="block text-xs font-medium text-gray-400 mb-1">
+                              Question ID
+                              <HelpTooltip text="A unique identifier used behind the scenes. Auto-generated from your question text." />
+                            </label>
+                            <input
+                              type="text"
+                              value={q.questionKey}
+                              onChange={(e) => updateQuestion(i, { questionKey: e.target.value })}
+                              className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                            />
+                          </div>
+                        )}
                         <div>
-                          <label className="block text-xs font-medium text-gray-400 mb-1">Question Key</label>
-                          <input
-                            type="text"
-                            value={q.questionKey}
-                            onChange={(e) => updateQuestion(i, { questionKey: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-400 mb-1">Type</label>
+                          <label className="block text-xs font-medium text-gray-400 mb-1">
+                            Answer Type
+                            <HelpTooltip text="Text = free typing. Email = email address input. Multiple Choice = pick from a list of options." />
+                          </label>
                           <select
                             value={q.type}
                             onChange={(e) => updateQuestion(i, { type: e.target.value })}
                             className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                           >
-                            <option value="text">Text Input</option>
-                            <option value="email">Email Input</option>
+                            <option value="text">Text (free typing)</option>
+                            <option value="email">Email address</option>
                             <option value="multiple_choice">Multiple Choice</option>
                           </select>
                         </div>
                         <div>
-                          <label className="block text-xs font-medium text-gray-400 mb-1">Required</label>
+                          <label className="block text-xs font-medium text-gray-400 mb-1">
+                            Must answer?
+                            <HelpTooltip text="If yes, quiz takers must answer this question before they can continue." />
+                          </label>
                           <select
                             value={q.required ? 'yes' : 'no'}
                             onChange={(e) => updateQuestion(i, { required: e.target.value === 'yes' })}
                             className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
                           >
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                            <option value="yes">Yes, required</option>
+                            <option value="no">No, optional</option>
                           </select>
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-medium text-gray-400 mb-1">Question Text</label>
+                        <label className="block text-xs font-medium text-gray-400 mb-1">
+                          Question
+                          <HelpTooltip text="This is what quiz takers see. Write it in the language of this quiz." />
+                        </label>
                         <textarea
                           value={q.question}
-                          onChange={(e) => updateQuestion(i, { question: e.target.value })}
+                          onChange={(e) => autoGenerateKey(i, e.target.value)}
                           rows={2}
-                          className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                          placeholder="e.g. What's your biggest trading challenge?"
+                          className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500"
                         />
                       </div>
 
                       {(q.type === 'text' || q.type === 'email') && (
                         <div>
-                          <label className="block text-xs font-medium text-gray-400 mb-1">Placeholder</label>
+                          <label className="block text-xs font-medium text-gray-400 mb-1">
+                            Example text
+                            <HelpTooltip text="Gray text shown inside the input before they type. Gives users a hint of what to enter (e.g., 'John' for a name field)." />
+                          </label>
                           <input
                             type="text"
                             value={q.placeholder}
                             onChange={(e) => updateQuestion(i, { placeholder: e.target.value })}
-                            className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+                            placeholder="e.g. John"
+                            className="w-full bg-white/5 border border-white/10 rounded px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-blue-500"
                           />
                         </div>
                       )}
@@ -474,27 +787,34 @@ export default function FormEditorPage() {
                       {/* Options editor (multiple choice) */}
                       {q.type === 'multiple_choice' && (
                         <div>
-                          <label className="block text-xs font-medium text-gray-400 mb-2">Options</label>
+                          <label className="block text-xs font-medium text-gray-400 mb-2">
+                            Answer Options
+                            <HelpTooltip text="These are the choices quiz takers can pick from. The answer text is what they see." />
+                          </label>
                           <div className="space-y-2">
                             {q.options.map((opt, oi) => (
                               <div key={oi} className="flex items-center gap-2">
-                                <input
-                                  type="text"
-                                  value={opt.value}
-                                  onChange={(e) => updateOption(i, oi, 'value', e.target.value)}
-                                  placeholder="value"
-                                  className="w-36 bg-white/5 border border-white/10 rounded px-2 py-1.5 text-white text-xs font-mono focus:outline-none focus:border-blue-500"
-                                />
+                                <span className="text-gray-500 text-xs w-5">{oi + 1}.</span>
+                                {showInternalIds && (
+                                  <input
+                                    type="text"
+                                    value={opt.value}
+                                    onChange={(e) => updateOption(i, oi, 'value', e.target.value)}
+                                    placeholder="internal_id"
+                                    className="w-36 bg-white/5 border border-white/10 rounded px-2 py-1.5 text-white text-xs font-mono focus:outline-none focus:border-blue-500"
+                                  />
+                                )}
                                 <input
                                   type="text"
                                   value={opt.label}
                                   onChange={(e) => updateOption(i, oi, 'label', e.target.value)}
-                                  placeholder="Label text"
+                                  placeholder="Answer text (what users see)"
                                   className="flex-1 bg-white/5 border border-white/10 rounded px-2 py-1.5 text-white text-sm focus:outline-none focus:border-blue-500"
                                 />
                                 <button
                                   onClick={() => removeOption(i, oi)}
                                   className="text-red-400 hover:text-red-300 text-sm px-1"
+                                  title="Remove this answer"
                                 >
                                   &times;
                                 </button>
@@ -505,56 +825,104 @@ export default function FormEditorPage() {
                             onClick={() => addOption(i)}
                             className="mt-2 text-blue-400 hover:text-blue-300 text-sm"
                           >
-                            + Add option
+                            + Add answer option
                           </button>
                         </div>
                       )}
 
-                      {/* Scoring config */}
-                      <div className="border-t border-white/10 pt-4">
-                        <div className="flex items-center gap-4 mb-2">
-                          <label className="block text-xs font-medium text-gray-400">Scoring Weight</label>
-                          <input
-                            type="number"
-                            min={0}
-                            max={10}
-                            value={q.scoringWeight}
-                            onChange={(e) => updateQuestion(i, { scoringWeight: parseInt(e.target.value) || 0 })}
-                            className="w-20 bg-white/5 border border-white/10 rounded px-2 py-1 text-white text-sm focus:outline-none focus:border-blue-500"
-                          />
-                          <span className="text-gray-500 text-xs">0 = not scored</span>
-                        </div>
-
-                        {q.scoringWeight > 0 && q.type === 'multiple_choice' && (
-                          <div className="mt-3">
-                            <label className="block text-xs font-medium text-gray-400 mb-2">
-                              Scoring Map (answer &rarr; personality type &rarr; points)
+                      {/* Scoring config — simplified */}
+                      {q.type === 'multiple_choice' && (
+                        <div className="border-t border-white/10 pt-4">
+                          <div className="flex items-center gap-3 mb-3">
+                            <label className="text-xs font-medium text-gray-400">
+                              Does this question affect the personality result?
                             </label>
-                            <div className="space-y-2">
-                              {q.options.map((opt) => (
-                                <div key={opt.value} className="flex items-center gap-2 flex-wrap">
-                                  <span className="text-xs text-gray-300 font-mono w-36 truncate">{opt.value}</span>
-                                  {PERSONALITY_TYPES.map((pt) => (
-                                    <div key={pt} className="flex items-center gap-1">
-                                      <span className="text-xs text-gray-500 truncate w-16">{pt.split('_')[0]}</span>
-                                      <input
-                                        type="number"
-                                        min={0}
-                                        max={10}
-                                        value={q.scoringMap[opt.value]?.[pt] || 0}
-                                        onChange={(e) =>
-                                          updateScoringMap(i, opt.value, pt, parseInt(e.target.value) || 0)
-                                        }
-                                        className="w-12 bg-white/5 border border-white/10 rounded px-1 py-0.5 text-white text-xs text-center focus:outline-none focus:border-blue-500"
-                                      />
-                                    </div>
-                                  ))}
-                                </div>
-                              ))}
-                            </div>
+                            <select
+                              value={isScored ? 'yes' : 'no'}
+                              onChange={(e) => setScoringEnabled(i, e.target.value === 'yes')}
+                              className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-blue-500"
+                            >
+                              <option value="no">No — info only</option>
+                              <option value="yes">Yes — affects the result</option>
+                            </select>
                           </div>
-                        )}
-                      </div>
+
+                          {isScored && (
+                            <>
+                              <div className="flex items-center gap-3 mb-4">
+                                <label className="text-xs font-medium text-gray-400">
+                                  How important is this question?
+                                  <HelpTooltip text="Primary = most important for determining the result. Secondary = supports the primary. Minor = small influence." />
+                                </label>
+                                <select
+                                  value={getImportanceFromWeight(q.scoringWeight)}
+                                  onChange={(e) => setScoringImportance(i, e.target.value)}
+                                  className="bg-white/5 border border-white/10 rounded px-3 py-1.5 text-white text-sm focus:outline-none focus:border-blue-500"
+                                >
+                                  <option value="primary">Primary (most important)</option>
+                                  <option value="secondary">Secondary</option>
+                                  <option value="minor">Minor</option>
+                                </select>
+                              </div>
+
+                              <div className="bg-white/5 rounded-lg p-4">
+                                <p className="text-xs font-medium text-gray-400 mb-3">
+                                  For each answer, which personality type does it suggest?
+                                  <HelpTooltip text="When someone picks this answer, it adds points toward the selected personality type. Higher points = stronger signal." />
+                                </p>
+                                <div className="space-y-3">
+                                  {q.options.map((opt) => {
+                                    const currentType = getAnswerPersonalityType(q, opt.value);
+                                    const currentPoints = getAnswerPoints(q, opt.value);
+                                    return (
+                                      <div key={opt.value} className="flex items-center gap-3">
+                                        <span className="text-sm text-gray-300 min-w-[140px] truncate" title={opt.label}>
+                                          {opt.label}
+                                        </span>
+                                        <span className="text-gray-600 text-xs">suggests</span>
+                                        <select
+                                          value={currentType}
+                                          onChange={(e) => {
+                                            const newType = e.target.value;
+                                            if (newType === '') {
+                                              updateAnswerScoring(i, opt.value, '', 0);
+                                            } else {
+                                              updateAnswerScoring(i, opt.value, newType, currentPoints);
+                                            }
+                                          }}
+                                          className="bg-white/5 border border-white/10 rounded px-2 py-1.5 text-white text-sm focus:outline-none focus:border-blue-500"
+                                        >
+                                          <option value="">None (no effect)</option>
+                                          {PERSONALITY_TYPES.map((pt) => (
+                                            <option key={pt.key} value={pt.key}>{pt.label}</option>
+                                          ))}
+                                        </select>
+                                        {currentType && (
+                                          <>
+                                            <span className="text-gray-600 text-xs">with</span>
+                                            <input
+                                              type="number"
+                                              min={1}
+                                              max={5}
+                                              value={currentPoints}
+                                              onChange={(e) => {
+                                                const pts = parseInt(e.target.value) || 1;
+                                                updateAnswerScoring(i, opt.value, currentType, pts);
+                                              }}
+                                              className="w-14 bg-white/5 border border-white/10 rounded px-2 py-1.5 text-white text-sm text-center focus:outline-none focus:border-blue-500"
+                                            />
+                                            <span className="text-gray-600 text-xs">points</span>
+                                          </>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      )}
 
                       {/* Actions */}
                       <div className="flex items-center gap-2 pt-2 border-t border-white/10">
@@ -572,12 +940,24 @@ export default function FormEditorPage() {
                         >
                           Move Down
                         </button>
+                        <button
+                          onClick={() => duplicateQuestion(i)}
+                          className="px-3 py-1 rounded text-sm bg-white/10 text-white hover:bg-white/20"
+                        >
+                          Duplicate
+                        </button>
+                        <button
+                          onClick={() => setShowAdvanced((prev) => ({ ...prev, [i]: !prev[i] }))}
+                          className="px-3 py-1 rounded text-sm bg-white/10 text-gray-400 hover:bg-white/20 hover:text-white"
+                        >
+                          {showAdvanced[i] ? 'Hide Advanced' : 'Advanced'}
+                        </button>
                         <div className="flex-1" />
                         <button
                           onClick={() => removeQuestion(i)}
                           className="px-3 py-1 rounded text-sm bg-red-600/20 text-red-400 hover:bg-red-600/40"
                         >
-                          Delete Question
+                          Delete
                         </button>
                       </div>
                     </div>
@@ -601,7 +981,7 @@ export default function FormEditorPage() {
             disabled={saving}
             className="px-8 py-3 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all font-semibold disabled:opacity-50"
           >
-            {saving ? 'Saving...' : 'Save Form'}
+            {saving ? 'Saving...' : 'Save Quiz'}
           </button>
         </div>
       </div>

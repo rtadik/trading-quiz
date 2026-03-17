@@ -348,7 +348,7 @@ export default function EmailAdminPage() {
             onClick={() => setShowPreview(false)}
           >
             <div
-              className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8"
+              className="bg-white text-gray-900 rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto p-8"
               onClick={(e) => e.stopPropagation()}
             >
               <h3 className="text-2xl font-bold mb-4">Email Preview</h3>
@@ -357,7 +357,7 @@ export default function EmailAdminPage() {
                 <p className="font-semibold">{subject || '(No subject)'}</p>
               </div>
               <div
-                className="prose prose-sm max-w-none"
+                className="prose prose-sm max-w-none text-gray-900"
                 dangerouslySetInnerHTML={{
                   __html: body
                     .replace(/{{firstName}}/g, '<strong>[First Name]</strong>')
