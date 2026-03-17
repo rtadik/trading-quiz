@@ -72,11 +72,12 @@ export async function POST(request: Request) {
 
     for (const recipient of recipients) {
       try {
-        // Replace variables in email body
+        // Replace variables in email body and convert newlines to HTML
         const personalizedBody = body
           .replace(/{{firstName}}/g, recipient.firstName)
           .replace(/{{personalityType}}/g, recipient.personalityType)
-          .replace(/{{email}}/g, recipient.email);
+          .replace(/{{email}}/g, recipient.email)
+          .replace(/\n/g, '<br />');
 
         const personalizedSubject = subject
           .replace(/{{firstName}}/g, recipient.firstName)
