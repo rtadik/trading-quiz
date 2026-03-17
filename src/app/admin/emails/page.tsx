@@ -363,6 +363,7 @@ export default function EmailAdminPage() {
                     .replace(/{{firstName}}/g, '<strong>[First Name]</strong>')
                     .replace(/{{personalityType}}/g, '<strong>[Personality Type]</strong>')
                     .replace(/{{email}}/g, '<strong>[Email]</strong>')
+                    .replace(/\n/g, '<br />')
                 }}
               />
               <button
