@@ -9,6 +9,7 @@ interface EmailInputStepProps {
   value: string;
   onSubmit: (value: string) => void;
   stepNumber: number;
+  locale?: string;
 }
 
 export default function EmailInputStep({
@@ -17,19 +18,22 @@ export default function EmailInputStep({
   value: initialValue,
   onSubmit,
   stepNumber,
+  locale = 'en',
 }: EmailInputStepProps) {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState('');
+
+  const isRu = locale === 'ru';
 
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const handleSubmit = () => {
     if (!value.trim()) {
-      setError('Please enter your email');
+      setError(isRu ? 'Пожалуйста, введите ваш email' : 'Please enter your email');
       return;
     }
     if (!isValidEmail(value.trim())) {
-      setError('Please enter a valid email address');
+      setError(isRu ? 'Пожалуйста, введите корректный адрес электронной почты' : 'Please enter a valid email address');
       return;
     }
     setError('');
@@ -69,14 +73,16 @@ export default function EmailInputStep({
           onClick={handleSubmit}
           className="bg-gradient-to-r from-blue-dark to-blue text-white font-semibold px-8 py-3 rounded-xl hover:from-blue hover:to-blue-light transition-all duration-200 flex items-center gap-2 shadow-lg shadow-blue-dark/25"
         >
-          Continue
+          {isRu ? 'Продолжить' : 'Continue'}
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
           </svg>
         </button>
       </div>
       <p className="text-xs text-gray-500 mt-4">
-        We&apos;ll send your personalized report to this email. No spam, ever.
+        {isRu
+          ? 'Мы отправим ваш персональный отчёт на этот адрес. Никакого спама.'
+          : "We'll send your personalized report to this email. No spam, ever."}
       </p>
     </motion.div>
   );

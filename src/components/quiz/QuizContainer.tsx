@@ -61,7 +61,8 @@ export default function QuizContainer({
       const slug = data.personalityType.replace(/_/g, '-');
       router.push(`${resultsBasePath}/${slug}?name=${encodeURIComponent(finalAnswers.first_name)}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
+      const fallback = locale === 'ru' ? 'Что-то пошло не так. Пожалуйста, попробуйте ещё раз.' : 'Something went wrong. Please try again.';
+      setError(err instanceof Error ? err.message : fallback);
       setState('questions');
     }
   };
@@ -102,6 +103,7 @@ export default function QuizContainer({
             value={answers[question.id] || ''}
             onSubmit={(value) => handleAnswer(question.id, value)}
             stepNumber={currentStep}
+            locale={locale}
           />
         )}
         {question.type === 'email' && (
@@ -112,6 +114,7 @@ export default function QuizContainer({
             value={answers[question.id] || ''}
             onSubmit={(value) => handleAnswer(question.id, value)}
             stepNumber={currentStep}
+            locale={locale}
           />
         )}
         {question.type === 'multiple_choice' && question.options && (

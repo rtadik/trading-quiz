@@ -7,9 +7,11 @@ import { PersonalityTypeInfo } from '@/lib/personality-types';
 interface ResultsCardProps {
   typeInfo: PersonalityTypeInfo;
   name: string;
+  locale?: string;
 }
 
-export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
+export default function ResultsCard({ typeInfo, name, locale = 'en' }: ResultsCardProps) {
+  const isRu = locale === 'ru';
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
   const pdfUrl = `${appUrl}/api/pdf/${typeInfo.type.replace(/_/g, '-')}?name=${encodeURIComponent(name)}`;
   const communityLink = process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#';
@@ -49,7 +51,11 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
           <p className="text-white text-sm font-medium">
-            Redirecting to your dashboard in <span className="text-blue-400 font-bold text-lg">{countdown}</span> seconds...
+            {isRu ? (
+              <>Переход через <span className="text-blue-400 font-bold text-lg">{countdown}</span> сек...</>
+            ) : (
+              <>Redirecting to your dashboard in <span className="text-blue-400 font-bold text-lg">{countdown}</span> seconds...</>
+            )}
           </p>
         </div>
       </motion.div>
@@ -70,7 +76,7 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
           transition={{ delay: 0.3 }}
           className="text-3xl md:text-4xl font-bold text-white mb-2"
         >
-          {name}, you&apos;re {typeInfo.name}!
+          {isRu ? `${name}, вы — ${typeInfo.name}!` : `${name}, you're ${typeInfo.name}!`}
         </motion.h1>
       </div>
 
@@ -101,13 +107,17 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
           </div>
           <div>
             <h3 className="text-white font-semibold mb-1">
-              Your personalized report is on its way!
+              {isRu ? 'Ваш персональный отчёт уже в пути!' : 'Your personalized report is on its way!'}
             </h3>
             <p className="text-gray-400 text-sm">
-              Check your inbox for your detailed Trading Personality Report with specific strategies and an action plan.
+              {isRu
+                ? 'Проверьте входящие — там будет подробный отчёт о вашем типе трейдера со стратегиями и планом действий.'
+                : 'Check your inbox for your detailed Trading Personality Report with specific strategies and an action plan.'}
             </p>
             <p className="text-yellow/80 text-sm mt-2 font-medium">
-               Can't find it? Please check your Promotions or Spam folder.
+              {isRu
+                ? 'Не нашли? Проверьте папки «Промоакции» или «Спам».'
+                : "Can't find it? Please check your Promotions or Spam folder."}
             </p>
           </div>
         </div>
@@ -124,7 +134,7 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
           <span className="text-2xl"></span>
           <div>
             <h3 className="text-yellow font-semibold mb-1">
-              Quick Tip for {typeInfo.name.replace('The ', '')}s
+              {isRu ? `Совет для: ${typeInfo.name}` : `Quick Tip for ${typeInfo.name.replace('The ', '')}s`}
             </h3>
             <p className="text-gray-300 text-sm leading-relaxed">
               {typeInfo.quickTip}
@@ -146,7 +156,7 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
           rel="noopener noreferrer"
           className="block w-full text-center bg-gradient-to-r from-pink-dark to-pink-light text-white font-semibold px-6 py-4 rounded-xl hover:from-[#EE01BC] hover:to-[#FF6BE8] transition-all duration-200 shadow-lg shadow-pink-dark/30"
         >
-          Download Your Full Report (PDF)
+          {isRu ? 'Скачать полный отчёт (PDF)' : 'Download Your Full Report (PDF)'}
         </a>
         <a
           href={communityLink}
@@ -154,7 +164,7 @@ export default function ResultsCard({ typeInfo, name }: ResultsCardProps) {
           rel="noopener noreferrer"
           className="block w-full text-center bg-white/5 border border-white/20 text-white font-semibold px-6 py-4 rounded-xl hover:bg-white/10 transition-all duration-200"
         >
-          Join Our Trading Community
+          {isRu ? 'Вступить в сообщество трейдеров' : 'Join Our Trading Community'}
         </a>
       </motion.div>
     </motion.div>

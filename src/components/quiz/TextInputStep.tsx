@@ -9,6 +9,7 @@ interface TextInputStepProps {
   value: string;
   onSubmit: (value: string) => void;
   stepNumber: number;
+  locale?: string;
 }
 
 export default function TextInputStep({
@@ -17,13 +18,16 @@ export default function TextInputStep({
   value: initialValue,
   onSubmit,
   stepNumber,
+  locale = 'en',
 }: TextInputStepProps) {
   const [value, setValue] = useState(initialValue);
   const [error, setError] = useState('');
 
+  const isRu = locale === 'ru';
+
   const handleSubmit = () => {
     if (!value.trim()) {
-      setError('Please enter a value');
+      setError(isRu ? 'Пожалуйста, введите значение' : 'Please enter a value');
       return;
     }
     setError('');
@@ -62,7 +66,7 @@ export default function TextInputStep({
         onClick={handleSubmit}
         className="mt-6 bg-gradient-to-r from-blue-dark to-blue text-white font-semibold px-8 py-3 rounded-xl hover:from-blue hover:to-blue-light transition-all duration-200 flex items-center gap-2 shadow-lg shadow-blue-dark/25"
       >
-        Continue
+        {isRu ? 'Продолжить' : 'Continue'}
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
         </svg>

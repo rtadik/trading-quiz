@@ -20,7 +20,7 @@ export default function MoscowResultsPage({ params, searchParams }: ResultsPageP
   return (
     <main className="min-h-screen py-12 px-4">
       <div className="max-w-2xl mx-auto">
-        <ResultsCard typeInfo={typeInfo} name={name} />
+        <ResultsCard typeInfo={typeInfo} name={name} locale="ru" />
       </div>
     </main>
   );
