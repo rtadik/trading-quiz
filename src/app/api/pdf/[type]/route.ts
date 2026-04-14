@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getPersonalityTypeFromSlug } from '@/lib/personality-types';
-import { generatePDF } from '@/lib/pdf-generator';
+import path from 'path';
+import fs from 'fs';
 
 export async function GET(
   request: NextRequest,
@@ -13,18 +14,25 @@ export async function GET(
       return NextResponse.json({ error: 'Invalid personality type' }, { status: 404 });
     }
 
-    const name = request.nextUrl.searchParams.get('name') || 'Trader';
-    const locale = request.nextUrl.searchParams.get('locale') || 'en';
-    const pdfBuffer = await generatePDF(personalityType, name, locale);
+    const locale = request.nextUrl.searchParams.get('locale') === 'ru' ? 'ru' : 'en';
+    const filename = `${params.type}-${locale}.pdf`;
+    const filePath = path.join(process.cwd(), 'public', 'pdfs', filename);
+
+    if (!fs.existsSync(filePath)) {
+      return NextResponse.json({ error: 'PDF not found' }, { status: 404 });
+    }
+
+    const pdfBuffer = fs.readFileSync(filePath);
 
     return new NextResponse(new Uint8Array(pdfBuffer), {
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': `attachment; filename="Trading-Personality-Report-${params.type}.pdf"`,
+        'Cache-Control': 'public, max-age=86400',
       },
     });
   } catch (error) {
-    console.error('PDF generation error:', error);
-    return NextResponse.json({ error: 'Failed to generate PDF' }, { status: 500 });
+    console.error('PDF serve error:', error);
+    return NextResponse.json({ error: 'Failed to serve PDF' }, { status: 500 });
   }
 }
