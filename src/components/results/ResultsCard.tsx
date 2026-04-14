@@ -13,7 +13,7 @@ interface ResultsCardProps {
 export default function ResultsCard({ typeInfo, name, locale = 'en' }: ResultsCardProps) {
   const isRu = locale === 'ru';
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || '';
-  const pdfUrl = `${appUrl}/api/pdf/${typeInfo.type.replace(/_/g, '-')}?name=${encodeURIComponent(name)}`;
+  const pdfUrl = `${appUrl}/api/pdf/${typeInfo.type.replace(/_/g, '-')}?name=${encodeURIComponent(name)}${isRu ? '&locale=ru' : ''}`;
   const communityLink = process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#';
 
   const [countdown, setCountdown] = useState(15);

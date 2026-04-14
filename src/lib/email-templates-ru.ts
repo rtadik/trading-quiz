@@ -68,7 +68,7 @@ const emotionalTraderEmailsRu: EmailTemplateFn[] = [
         <li>5-шаговый план улучшений, который можно начать СЕГОДНЯ</li>
         <li>Как успешные эмоциональные трейдеры трансформируют свои результаты</li>
       </ul>
-      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/emotional-trader?name=${encodeURIComponent(firstName)}" class="cta">Скачать отчёт (PDF)</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/emotional-trader?name=${encodeURIComponent(firstName)}&locale=ru" class="cta">Скачать отчёт (PDF)</a></p>
       <p>В течение ближайших двух недель я буду присылать вам конкретные стратегии и реальные истории других эмоциональных трейдеров.</p>
       <hr class="divider">
       <p>P.S. — Хотите общаться с другими трейдерами? <a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}">Присоединяйтесь к нашему сообществу</a></p>
@@ -238,7 +238,7 @@ const timeStarvedTraderEmailsRu: EmailTemplateFn[] = [
         <li>5-шаговый план для эффективной торговли при ограниченном времени</li>
         <li>Как успешные занятые трейдеры побеждают</li>
       </ul>
-      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/time-starved-trader?name=${encodeURIComponent(firstName)}" class="cta">Скачать отчёт (PDF)</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/time-starved-trader?name=${encodeURIComponent(firstName)}&locale=ru" class="cta">Скачать отчёт (PDF)</a></p>
       <p>В течение ближайших двух недель я буду присылать стратегии специально для занятых трейдеров.</p>
       <hr class="divider">
       <p>P.S. — Хотите общаться с другими занятыми трейдерами? <a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}">Присоединяйтесь к нашему сообществу</a></p>
@@ -394,7 +394,7 @@ const inconsistentExecutorEmailsRu: EmailTemplateFn[] = [
         <li>5-шаговый план для закрытия разрыва в исполнении</li>
         <li>Как успешные исполнители трансформируют свою последовательность</li>
       </ul>
-      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/inconsistent-executor?name=${encodeURIComponent(firstName)}" class="cta">Скачать отчёт (PDF)</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/inconsistent-executor?name=${encodeURIComponent(firstName)}&locale=ru" class="cta">Скачать отчёт (PDF)</a></p>
       <p>В течение ближайших двух недель я поделюсь стратегиями специально для трейдеров, которые знают что делать, но не могут делать это стабильно.</p>
       <hr class="divider">
       <p>P.S. — Общайтесь с другими решающими ту же проблему: <a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}">Присоединяйтесь к нашему сообществу</a></p>
@@ -547,7 +547,7 @@ const overwhelmedAnalystEmailsRu: EmailTemplateFn[] = [
         <li>5-шаговый план упрощения</li>
         <li>Как успешные аналитики отсеивают шум</li>
       </ul>
-      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/overwhelmed-analyst?name=${encodeURIComponent(firstName)}" class="cta">Скачать отчёт (PDF)</a></p>
+      <p><a href="${process.env.NEXT_PUBLIC_APP_URL}/api/pdf/overwhelmed-analyst?name=${encodeURIComponent(firstName)}&locale=ru" class="cta">Скачать отчёт (PDF)</a></p>
       <p>В течение ближайших двух недель я помогу вам упростить подход и обрести ясность.</p>
       <hr class="divider">
       <p>P.S. — Присоединяйтесь к тем, кто нашёл ясность: <a href="${process.env.NEXT_PUBLIC_COMMUNITY_LINK || '#'}">Наше сообщество</a></p>

@@ -14,7 +14,8 @@ export async function GET(
     }
 
     const name = request.nextUrl.searchParams.get('name') || 'Trader';
-    const pdfBuffer = await generatePDF(personalityType, name);
+    const locale = request.nextUrl.searchParams.get('locale') || 'en';
+    const pdfBuffer = await generatePDF(personalityType, name, locale);
 
     return new NextResponse(new Uint8Array(pdfBuffer), {
       headers: {
